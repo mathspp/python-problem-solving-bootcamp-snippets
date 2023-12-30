@@ -1,0 +1,22 @@
+from collections import defaultdict, deque
+
+graph = defaultdict(list)
+with open(INPUT_FILE, "r") as f:
+    for line in f:
+        v1, v2 = line.strip().split("-")
+        graph[v1].append(v2)
+        graph[v2].append(v1)
+        
+count = 0
+paths_being_built = deque([("start", )])
+while paths_being_built:
+    path_so_far = paths_being_built.pop()
+    if path_so_far[-1] == "end":
+        count += 1
+        continue
+
+    for neighbour in graph[path_so_far[-1]]:
+        if not (neighbour.lower() == neighbour and neighbour in path_so_far):
+            paths_being_built.appendleft(path_so_far + (neighbour, ))
+
+print(count)

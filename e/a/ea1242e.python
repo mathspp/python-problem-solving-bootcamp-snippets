@@ -1,0 +1,34 @@
+from math import ceil, floor
+
+def explode(snail):
+    values, depths = snail
+    try:
+        idx = depths.index(5)
+    except ValueError:
+        return snail, False
+
+    new_values = values[::]
+    if idx > 0:
+        new_values[idx - 1] += values[idx]
+    if idx + 2 < len(new_values):
+        new_values[idx + 2] += values[idx + 1]
+    new_values = new_values[:idx] + [0] + new_values[idx + 2:]
+    depths = depths[:idx] + depths[idx + 1:]
+    return (new_values, depths), True
+
+def split(snail):
+    values, depths = snail
+    for idx, val in enumerate(values):
+        if val > 9:
+            break
+
+    if val <= 9:
+        return snail, False
+
+    new_depth = 1 + max(
+        depths[idx - 1] if idx > 0 else 0,
+        depths[idx] if idx < len(depths) else 0,
+    )
+    values = values[:idx] + [floor(val / 2), ceil(val / 2)] + values[idx + 1:]
+    depths = depths[:idx] + [new_depth] + depths[idx:]
+    return (values, depths), True

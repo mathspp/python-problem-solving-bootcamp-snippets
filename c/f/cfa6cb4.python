@@ -1,0 +1,33 @@
+from collections import Counter
+from itertools import product
+from time import time
+
+
+def play(positions):
+    counts = Counter(sum(rolls) for rolls in product(range(1, 4), repeat=3))
+
+    universes = Counter({(positions, (0,) * len(positions), 0) : 1})
+    wins = [0] * len(positions)
+    while universes:
+        new_universes = Counter()
+        for (pos_, sco_, player), roll in product(universes, counts):
+            pos, sco = list(pos_), list(sco_)
+            pos[player] = (pos[player] - 1 + roll) % 10 + 1
+            sco[player] += pos[player]
+
+            total_universe_count = universes[pos_, sco_, player] * counts[roll]
+            if sco[player] >= 21:
+                wins[player] += total_universe_count
+            else:
+                new_universes[tuple(pos), tuple(sco), (player + 1) % len(positions)] += total_universe_count
+        universes = new_universes
+
+    return wins
+
+with open(INPUT_FILE, "r") as f:
+    positions = tuple([int(line.strip().split()[-1]) for line in f])
+
+start = time()
+wins = play(positions)
+print(f"Max in {wins} is {max(wins)}.")
+print(f"Finished in {time() - start:.3f} seconds.")

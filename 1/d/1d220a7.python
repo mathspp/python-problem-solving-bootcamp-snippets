@@ -1,0 +1,10 @@
+def update_status(board, status, number):
+    for row_s, row_b in zip(status, board):
+        for idx, num in enumerate(row_b):
+            if num == number:
+                row_s[idx] = True
+
+board = [[1, 2], [3, 4]]
+status = [[False, False], [False, False]]
+update_status(board, status, 3)
+status  # Notice how the third Boolean value is now `True`.

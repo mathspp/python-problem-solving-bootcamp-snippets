@@ -1,0 +1,21 @@
+def split(snail):
+    values, depths = snail
+    if all((witness := val) < 10 for val in values):
+        return snail, False
+
+    idx = values.index(witness)
+    new_depth = 1 + max(
+        depths[idx - 1] if idx > 0 else 0,
+        depths[idx] if idx < len(depths) else 0,
+    )
+    values = values[:idx] + [floor(witness / 2), ceil(witness / 2)] + values[idx + 1:]
+    depths = depths[:idx] + [new_depth] + depths[idx:]
+    return (values, depths), True
+
+assert (
+    addition(
+        parse_snailfish("[[[[4,3],4],4],[7,[[8,4],9]]]"),
+        parse_snailfish("[1,1]"),
+    ) ==
+    parse_snailfish("[[[[0,7],4],[[7,8],[6,0]]],[8,1]]")
+)

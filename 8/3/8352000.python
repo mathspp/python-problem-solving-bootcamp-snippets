@@ -1,0 +1,3 @@
+s = "abcde"
+for idx in range(20):
+    print(s[idx % len(s)], end=" ")

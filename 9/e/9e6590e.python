@@ -1,0 +1,5 @@
+for line in lines:
+    hints, values = line.split(" | ")
+    hints = hints.split()
+    values = values.split()
+    ...

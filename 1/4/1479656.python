@@ -1,0 +1,13 @@
+with open(INPUT_FILE, "r") as f:
+    fish_pop = [int(num) for num in f.readline().split(",")]
+
+for _ in range(80):
+    new = 0
+    for idx, state in enumerate(fish_pop):
+        fish_pop[idx] -= 1
+        if state == 0:
+            new += 1
+            fish_pop[idx] = 6
+    fish_pop += [8] * new
+
+print(len(fish_pop))

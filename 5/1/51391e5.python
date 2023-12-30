@@ -1,0 +1,10 @@
+WS = 1
+
+with open(INPUT_FILE, "r") as f:
+    depths = [int(line) for line in f]
+
+count = 0
+for i in range(WS, len(depths)):
+    if depths[i - WS] < depths[i]:
+        count += 1
+print(count)  # The value from part 1.

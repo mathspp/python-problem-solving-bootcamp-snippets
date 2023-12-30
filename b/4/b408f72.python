@@ -1,0 +1,7 @@
+def add_up(tree_dict):
+    if isinstance(tree_dict, dict):
+        return sum(add_up(sub_dict) for sub_dict in tree_dict.values())
+    else:
+        return tree_dict
+
+print(add_up(tree_counter))  # It's 29 because we added a count just now.

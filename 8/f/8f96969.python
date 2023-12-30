@@ -1,0 +1,13 @@
+def dfs(graph, path):
+    *_, last_visited = path
+    if last_visited == "end":
+        return 1
+
+    can_repeat = not has_repeated_cave(path)
+    return sum(
+        dfs(graph, path + [neighb])
+        for neighb in graph[last_visited]
+        if neighb != "start" and (neighb.isupper() or neighb not in path or can_repeat)
+    )
+
+dfs(graph, ["start"])

@@ -1,0 +1,11 @@
+def boolean_matrix_has_bingo(matrix):
+    return (
+        any(all(row) for row in matrix) or
+        any(all(col) for col in zip(*matrix))
+    )
+
+boolean_matrix_has_bingo([
+    [True, False, False],
+    [True, False, True],
+    [True, True, False],
+])

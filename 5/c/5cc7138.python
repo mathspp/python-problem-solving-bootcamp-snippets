@@ -1,0 +1,38 @@
+def parse_board_matrix(board_string):
+    return [
+        [int(num) for num in string_row.split()]
+        for string_row in board_string.splitlines()
+    ]
+
+def boolean_matrix_has_bingo(matrix):
+    return (
+        any(all(row) for row in matrix) or
+        any(all(col) for col in zip(*matrix))
+    )
+
+def update_status(board, status, number):
+    for row_s, row_b in zip(status, board):
+        for idx, num in enumerate(row_b):
+            row_s[idx] |= num == number
+            
+def empty_boolean_matrix(size):
+    return [[False] * size for _ in range(size)]
+
+def bingo_simulation(nums_drawn, boards, statuses):
+    # Go over each number drawn.
+    for num_drawn in nums_drawn:
+        # Iterate over all boards ...
+        for board, status in zip(boards, statuses):
+            update_status(board, status, num_drawn)
+            # ... and if there is a bingo, ...
+            if boolean_matrix_has_bingo(status):
+                return num_drawn, board, status  # ... return all information.
+            
+with open(INPUT_FILE) as f:
+    contents = f.read().strip().split("\n\n")
+
+numbers, *board_data = contents
+numbers = [int(num) for num in numbers.split(",")]  # Make sure the numbers are integers.
+boards = [parse_board_matrix(data) for data in board_data]
+
+bingo_simulation(numbers, boards, [empty_boolean_matrix(len(boards[0])) for _ in boards])

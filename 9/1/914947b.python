@@ -1,0 +1,8 @@
+from itertools import cycle
+
+printed = 0
+for i in cycle(range(10)):
+    print(i, end=" ")
+    printed += 1
+    if printed > 30:
+        break

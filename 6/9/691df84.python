@@ -1,0 +1,6 @@
+from itertools import tee
+
+def triplewise(it):
+    it1, it2, it3 = tee(it, 3)
+    next(it2); next(it3); next(it3)
+    yield from zip(it1, it2, it3)

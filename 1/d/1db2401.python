@@ -1,0 +1,6 @@
+def neighbours(graph, cave):
+    neighbs = []
+    for edge in graph:
+        if cave in edge:
+            neighbs.append(edge[0] if edge[1] == cave else edge[1])
+    return neighbs

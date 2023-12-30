@@ -1,0 +1,4 @@
+def find_character(rules, source):
+    return next(filter(lambda rule: rule[0] == source, rules))[1]
+
+print(find_character(rules, "SS"))

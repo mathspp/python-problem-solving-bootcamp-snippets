@@ -1,0 +1,21 @@
+def scanners_match(reference, other):
+    ref_dists = build_sets_of_distances(reference)
+    other_dists = build_sets_of_distances(other)
+
+    # Build a map of the other points that match the reference points.
+    mapping = {}
+    for ref_idx, ref_p in enumerate(ref_dists):
+        for other_idx, other_p in enumerate(other_dists):
+            if len(other_p & ref_p) >= POINT_MATCH_THRESHOLD - 1:
+                mapping[other[other_idx]] = reference[ref_idx]
+
+    n = len(mapping.keys())
+    # No match was possible.
+    if not n:
+        return False, None, None
+
+    # Compute the centres of gravity for both scanners.
+    ref_cog = sum((mapping.values()), Point(0, 0, 0)) / n
+    oth_cog = sum((mapping.keys()), Point(0, 0, 0)) / n
+
+    # ...

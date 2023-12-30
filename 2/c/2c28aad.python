@@ -1,0 +1,4 @@
+with open(INPUT_FILE, "r") as f:
+    polymer = f.readline().strip()
+k = len(polymer)
+print(k)

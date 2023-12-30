@@ -1,0 +1,149 @@
+from itertools import chain, product
+from queue import SimpleQueue
+from time import time
+
+
+POINT_MATCH_THRESHOLD = 12
+
+
+class Point:
+    def __init__(self, x, y, z):
+        self.x, self.y, self.z = x, y, z
+
+    @classmethod
+    def fromstring(cls, string):
+        """Create a point from a comma-separated string."""
+        return cls(*map(int, string.strip().split(",")))
+
+    def __add__(self, other):
+        """Implements self + other, if other is a Point."""
+        return Point(self.x + other.x, self.y + other.y, self.z + other.z)
+
+    def __sub__(self, other):
+        """Implements self - other, if other is a Point."""
+        return Point(self.x - other.x, self.y - other.y, self.z - other.z)
+
+    def __truediv__(self, other):
+        """Implements self / other, if other is a number."""
+        return Point(self.x / other, self.y / other, self.z / other)
+
+    def __repr__(self):
+        """Returns the string representation of self."""
+        return f"Point({self.x}, {self.y}, {self.z})"
+
+    def __eq__(self, other):
+        """Check if the two points are equal."""
+        return (self.x, self.y, self.z) == (other.x, other.y, other.z)
+    
+    def __hash__(self):
+        """Gives a unique hash to each point to allow points to be contained in sets."""
+        return hash((self.x, self.y, self.z))
+
+    def rotate(self, rot):
+        coords = [None, self.x, self.y, self.z]
+        return Point(*[sign(c) * coords[abs(c)] for c in rot])
+
+    def norm_sq(self):
+        """Returns the square of the norm of the point."""
+        return self.x ** 2 + self.y ** 2 + self.z ** 2
+
+    def coords(self):
+        """Returns a list with all the coordinates of the point."""
+        return [self.x, self.y, self.z]
+
+    
+def sign(x):
+    if x > 0: return 1
+    elif x < 0: return -1
+    else: return 0
+
+
+def build_sets_of_distances(points):
+    return [{(p2 - p1).norm_sq() for p2 in points} for p1 in points]
+
+
+def scanners_match(reference, other):
+    ref_dists = build_sets_of_distances(reference)
+    other_dists = build_sets_of_distances(other)
+
+    # Build a map of the other points that match the reference points.
+    mapping = {}
+    for ref_idx, ref_p in enumerate(ref_dists):
+        for other_idx, other_p in enumerate(other_dists):
+            if len(other_p & ref_p) >= POINT_MATCH_THRESHOLD - 1:
+                mapping[other[other_idx]] = reference[ref_idx]
+
+    n = len(mapping.keys())
+    # No match was possible.
+    if not n:
+        return False, None, None
+
+    # Compute the centres of gravity for both scanners.
+    ref_cog = sum((mapping.values()), Point(0, 0, 0)) / n
+    oth_cog = sum((mapping.keys()), Point(0, 0, 0)) / n
+
+    # Look for a pair of points for which it is easy to compute the rotation.
+    for oth_p, ref_p in mapping.items():
+        oth_p_ = oth_p - oth_cog
+        ref_p_ = ref_p - ref_cog
+        if len({abs(c) for c in oth_p_.coords()}) == 3:
+            break
+    else:
+        raise RuntimeError("Algorithm not robust enough.")
+
+    rot = find_rotation(ref_p_, oth_p_)
+    return True, rot, ref_p - oth_p.rotate(rot)
+
+
+def find_rotation(reference, other):
+    """Finds the rotation `rot` such that other.rotate(rot) == reference."""
+    ref, oth = reference.coords(), other.coords()
+    abs_ref, abs_other = [round(abs(c)) for c in ref], [round(abs(c)) for c in oth]
+    rot = []
+    for i in range(3):
+        is_at = abs_other.index(abs_ref[i])
+        rot.append(sign(ref[i] * oth[is_at]) * (1 + is_at))
+    return rot
+
+
+def manhattan(p1, p2):
+    return abs(p1.x - p2.x) + abs(p1.y - p2.y) + abs(p1.z - p2.z)
+
+
+with open(INPUT_FILE, "r") as f:
+    scanners = [
+        tuple(map(Point.fromstring, scanner.splitlines()[1:]))  # Ignore header line.
+        for scanner in f.read().split("\n\n")  # Split in scanner groups.
+    ]
+
+start = time()
+
+references = SimpleQueue()
+references.put(0)
+done, to_connect = [0], list(range(1, len(scanners)))
+transformations, connects_to = {}, {}
+while to_connect:
+    reference = references.get()
+    for other_scanner in to_connect:
+        matches, rot, vec = scanners_match(scanners[reference], scanners[other_scanner])
+        if matches:
+            transformations[other_scanner] = (rot, vec)
+            connects_to[other_scanner] = reference
+            references.put(other_scanner)
+            done.append(other_scanner)
+    to_connect = [other for other in to_connect if other not in done]
+
+# Transform all scanners into 0's frame of reference.
+frame_of_reference = {other: other for other in done}
+positions = {other: Point(0, 0, 0) for other in done}
+for other in reversed(done):
+    while frame_of_reference[other] != 0:
+        rot, vec = transformations[frame_of_reference[other]]
+        scanners[other] = [p.rotate(rot) + vec for p in scanners[other]]
+        positions[other] = positions[other].rotate(rot) + vec
+        frame_of_reference[other] = connects_to[frame_of_reference[other]]
+
+
+print(len(set(chain.from_iterable(scanners))))
+print(max(manhattan(p1, p2) for p1, p2 in product(positions.values(), repeat=2)))
+print(f"Took {time() - start:.2f} seconds.")

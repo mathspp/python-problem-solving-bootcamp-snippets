@@ -1,0 +1,9 @@
+class Point:
+    def __init__(self, x, y, z):
+        self.x, self.y, self.z = x, y, z
+
+    def __add__(self, other):
+        """Implements self + other, if other is a Point."""
+        return Point(self.x + other.x, self.y + other.y, self.z + other.z)
+
+print(Point(1, 2, 3) + Point(2, 3, 4))

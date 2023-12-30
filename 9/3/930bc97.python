@@ -1,0 +1,16 @@
+with open(INPUT_FILE, "r") as f:
+    grid = [
+        [int(num) for num in line.strip()]
+        for line in f
+    ]
+
+risk = 0
+for r, row in enumerate(grid):
+    for c, val in enumerate(row):
+        up = grid[r - 1][c] if r > 0 else float("inf")
+        down = grid[r + 1][c] if r < len(grid) - 1 else float("inf")
+        left = grid[r][c - 1] if c > 0 else float("inf")
+        right = grid[r][c + 1] if c < len(grid) - 1 else float("inf")
+        if val < up and val < down and val < left and val < right:
+            risk += val + 1
+print(risk)

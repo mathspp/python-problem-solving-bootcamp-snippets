@@ -1,0 +1,5 @@
+def addition(left, right):
+    """Adds two snails and returns the result in reduced form."""
+    (lvals, ldepths), (rvals, rdepths) = left, right
+    snail = (lvals + rvals, [1 + d for d in ldepths] + [1] + [1 + d for d in rdepths])
+    return snailfish_reduction(snail)

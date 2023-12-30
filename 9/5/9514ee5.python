@@ -1,0 +1,25 @@
+from collections import deque
+
+WS = 3
+
+window = deque(maxlen=WS + 1)
+
+with open(INPUT_FILE, "r") as f:
+    depths = (int(line) for line in f)  # Using a lazy generator now.
+
+    # Start by putting `WS` elements inside `window`.
+    for _ in range(WS):
+        window.append(next(depths))
+
+    count = 0
+    # When we get here, `depths` is already missing some elements from the beginning,
+    # so we can already start comparing depth values.
+    for elem in depths:
+        window.append(elem)
+        if window[0] < window[-1]:
+            count += 1
+        # We can't see it, but the `.append` is forcing the older elements
+        # out of the window, so it's always safe to compare the first and
+        # last elements of `window`.
+
+    print(count)

@@ -1,0 +1,25 @@
+with open(INPUT_FILE, "r") as f:
+    data = f.readline().strip()
+
+xdata, ydata = data.removeprefix("target area: ").split(", ")
+(xmin, xmax), (ymin, ymax) = [map(int, cdata[2:].split("..")) for cdata in (xdata, ydata)]
+
+highest_high = 0
+for vx_ in range(xmax + 1):
+    for vy_ in range(abs(ymin) + 1):
+        vx, vy = vx_, vy_
+        t, xpos, ypos, best_height = 0, 0, 0, 0
+        while xpos <= xmax and ypos >= ymin:
+            xpos += vx
+            vx = max(vx - 1, 0)
+            # Stop if vx is zero and we haven't reached the left edge of the target.
+            if not vx and xpos < xmin:
+                break
+            ypos += vy
+            vy -= 1
+            best_height = max(best_height, ypos)
+            if xmin <= xpos <= xmax and ymin <= ypos <= ymax:
+                highest_high = max(highest_high, best_height)
+                break
+            t += 1
+print(highest_high)

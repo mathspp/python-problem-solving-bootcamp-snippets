@@ -1,0 +1,8 @@
+from collections import Counter
+
+counter = Counter()
+
+for segment in segments:
+    counter += Counter(build_segment(segment))
+
+sum(count > 1 for count in counter.values())

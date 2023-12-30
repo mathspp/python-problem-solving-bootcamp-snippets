@@ -1,0 +1,32 @@
+ROTATIONS = [  # Start by fixing the main direction we are facing.
+    # facing positive x
+    (1, 2, 3),
+    (1, -3, 2),
+    (1, -2, -3),
+    (1, 3, -2),
+    # facing negative x
+    (-1, -2, 3),
+    (-1, 3, 2),
+    (-1, 2, -3),
+    (-1, -3, -2),
+    # facing positive y
+    (2, 3, 1),
+    (2, -1, 3),
+    (2, -3, -1),
+    (2, 1, -3),
+    # facing negative y
+    (-2, -3, 1),
+    (-2, 1, 3),
+    (-2, 3, -1),
+    (-2, -1, -3),
+    # facing positive z
+    (3, 1, 2),
+    (3, -2, 1),
+    (3, -1, -2),
+    (3, 2, -1),
+    # facing negative z
+    (-3, -1, 2),
+    (-3, 2, 1),
+    (-3, 1, -2),
+    (-3, -2, -1),
+]

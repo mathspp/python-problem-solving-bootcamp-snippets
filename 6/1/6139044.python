@@ -1,0 +1,5 @@
+parse_packet("00010000000")
+#             ^^^~~~^^^^^
+#             |  |  | value 0
+#             |  |  type 4
+#             | version 0

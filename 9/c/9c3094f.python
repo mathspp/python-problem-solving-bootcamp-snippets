@@ -1,0 +1,27 @@
+from functools import reduce
+
+def explode(snailfish_num, depth=0):
+    ...
+
+def split(snailfish_num):
+    ...
+
+def snailfish_reduction(snailfish_num):
+    ...
+
+def addition(left, right):
+    ...
+
+def snailfish_sum(snailfish_numbers):
+    return reduce(addition,  snailfish_numbers)
+
+def magnitude(snailfish_num):
+    ...
+
+def parse_snailfish(string):
+    ...
+
+with open(INPUT_FILE, "r") as f:
+    snailfish_numbers = [parse_snailfish(line.strip()) for line in f]
+
+print(magnitude(snailfish_sum(snailfish_numbers)))

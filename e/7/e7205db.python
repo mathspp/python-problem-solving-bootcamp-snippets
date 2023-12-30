@@ -1,0 +1,4 @@
+ab = Char("a") >> Char("b")
+print(ab("abcd"))
+print(ab("azzz"))
+print(ab("zbcd"))

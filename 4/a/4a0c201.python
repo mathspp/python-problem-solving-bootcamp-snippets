@@ -1,0 +1,10 @@
+from collections import Counter
+from itertools import cycle, islice
+
+with open(INPUT_FILE, "r") as f:
+    fish_pop = Counter(int(num) for num in f.readline().split(","))
+
+for pointer in islice(cycle(range(9)), 256):
+    fish_pop[(pointer + 7) % 9] += fish_pop[pointer]
+    
+print(fish_pop.total())  # Counter.total new in Python 3.10.

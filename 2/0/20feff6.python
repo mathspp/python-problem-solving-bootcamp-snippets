@@ -1,0 +1,47 @@
+from functools import reduce
+from operator import and_
+
+def parse_board_matrix(board_string):
+    return [
+        [int(num) for num in string_row.split()]
+        for string_row in board_string.splitlines()
+    ]
+
+def bit_rows_has_bingo(matrix):
+    # The number with the appropriate number of 1s in the binary expansion:
+    target = 2 ** len(matrix) - 1
+    return (
+        any(target == row for row in matrix) or
+        reduce(and_, matrix) > 0
+    )
+
+def update_status(board, status, number):
+    board_size = len(board[0])
+    for idx, row in enumerate(board):
+        try:
+            pos = row.index(number)
+            status[idx] |= 1 << (board_size - pos - 1)
+        except ValueError:
+            pass
+            
+def empty_bit_rows(size):
+    return [0 for _ in range(size)]
+
+def bingo_simulation(nums_drawn, boards, statuses):
+    # Go over each number drawn.
+    for num_drawn in nums_drawn:
+        # Iterate over all boards ...
+        for board, status in zip(boards, statuses):
+            update_status(board, status, num_drawn)
+            # ... and if there is a bingo, ...
+            if bit_rows_has_bingo(status):
+                return num_drawn, board, status  # ... return all information.
+            
+with open(INPUT_FILE) as f:
+    contents = f.read().strip().split("\n\n")
+
+numbers, *board_data = contents
+numbers = [int(num) for num in numbers.split(",")]  # Make sure the numbers are integers.
+boards = [parse_board_matrix(data) for data in board_data]
+
+bingo_simulation(numbers, boards, [empty_bit_rows(len(boards[0])) for _ in boards])

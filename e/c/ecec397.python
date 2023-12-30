@@ -1,0 +1,76 @@
+from functools import partial
+
+def parse_D(packet_string):
+    return packet_string[0], packet_string[1:]
+
+def parse_Dn(n, packet_string):
+    parsed = ""
+    for _ in range(n):
+        D, packet_string = parse_D(packet_string)
+        parsed += D
+    return parsed, packet_string
+
+parse_version = partial(parse_Dn, 3)
+parse_type = partial(parse_Dn, 3)
+parse_packet_number = partial(parse_Dn, 11)
+parse_bit_length = partial(parse_Dn, 15)
+parse_group = partial(parse_Dn, 4)
+
+def parse_operator_packets(packet_string):
+    flag, packet_string = parse_D(packet_string)
+    if flag == "0":
+        length, packet_string = parse_bit_length(packet_string)
+        bit_length = int(length, 2)
+        to_parse = packet_string[:bit_length]  # Part of the string to be parsed.
+        packets = []
+        while to_parse:
+            packet, to_parse = parse_packet(to_parse)
+            packets.append(packet)
+        packet_string = packet_string[bit_length:]
+    elif flag == "1":
+        number, packet_string = parse_packet_number(packet_string)
+        packet_number = int(number, 2)
+        packets = []
+        for _ in range(packet_number):
+            packet, packet_string = parse_packet(packet_string)
+            packets.append(packet)
+    return packets, packet_string
+
+def parse_value(packet_string):
+    parsed = ""
+    while packet_string[0] == "1":
+        group, packet_string = parse_group(packet_string[1:])
+        parsed += group
+    group, packet_string = parse_group(packet_string[1:])
+    return parsed + group, packet_string
+
+def parse_packet(packet_string):
+    version, packet_string = parse_version(packet_string)
+    type_, packet_string = parse_type(packet_string)
+    if type_ == "100":
+        value, packet_string = parse_value(packet_string)
+        return (int(version, 2), int(value, 2)), packet_string
+    else:
+        packets, packet_string = parse_operator_packets(packet_string)
+        return (int(version, 2), int(type_, 2), packets), packet_string
+
+def hex_to_bin(string):
+    return bin(int(string, 16)).removeprefix("0b").zfill(4 * len(string))
+
+def parse(hexadecimal_packet):  # <- Entry point to the parser.
+    return parse_packet(hex_to_bin(hexadecimal_packet))
+
+def sum_versions(packet):
+    """Sum the versions of the given packet and all (deeply) nested sub-packets."""
+
+    if len(packet) == 2:
+        return packet[0]
+    elif len(packet) == 3:
+        return packet[0] + sum(sum_versions(sub) for sub in packet[2])
+
+
+with open(INPUT_FILE, "r") as f:
+    hex_string = f.read().strip()
+
+parsed, _ = parse_packet(hex_to_bin(hex_string))
+print(sum_versions(parsed))

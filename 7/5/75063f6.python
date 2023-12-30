@@ -1,0 +1,51 @@
+from itertools import chain
+from queue import SimpleQueue
+from time import time
+
+
+def points_of_view_match(references, others, point_matching_threshold):
+    """Check if two POVs match and return indices of matching points."""
+    ignore_last = point_matching_threshold - 1
+    for ref_idx, reference in enumerate(references[:-ignore_last]):
+        for other_idx, other in enumerate(others[:-ignore_last]):
+            if len(set(reference) & set(other)) >= point_matching_threshold - 1:
+                return True, ref_idx, other_idx
+    return False, None, None
+
+
+with open(INPUT_FILE, "r") as f:
+    scanners = [
+        tuple(map(Point.fromstring, scanner.splitlines()[1:]))  # Ignore header line.
+        for scanner in f.read().split("\n\n")  # Split in scanner groups.
+    ]
+
+
+start = time()
+
+references = SimpleQueue()
+references.put(0)
+done, to_connect = [0], list(range(1, len(scanners)))
+transformations, connects_to = {}, {}
+while to_connect:
+    reference = references.get()
+    for other_scanner in to_connect:
+        matches, rot, vec = scanners_match(scanners[reference], scanners[other_scanner])
+        if matches:
+            transformations[other_scanner] = (rot, vec)
+            connects_to[other_scanner] = reference
+            references.put(other_scanner)
+            done.append(other_scanner)
+    to_connect = [other for other in to_connect if other not in done]
+    print(f"Missing {len(to_connect)}.")
+
+# Transform all scanners into 0's frame of reference.
+frame_of_reference = {other: other for other in done}
+for other in reversed(done):
+    while frame_of_reference[other] != 0:
+        rot, vec = transformations[frame_of_reference[other]]
+        scanners[other] = [p.rotate(rot) + vec for p in scanners[other]]
+        frame_of_reference[other] = connects_to[frame_of_reference[other]]
+
+
+print(len(set(chain.from_iterable(scanners))))
+print(f"Took {time() - start:.2f} seconds.")

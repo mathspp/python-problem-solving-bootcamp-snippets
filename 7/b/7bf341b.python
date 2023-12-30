@@ -1,0 +1,12 @@
+from collections import defaultdict
+from math import ceil, floor, sqrt
+
+yrange = range(ymin, abs(ymin) + 1)
+
+vy_by_t = defaultdict(list)
+for vy in yrange:
+    X = 2 * vy + 1
+    tmin = ceil((X + sqrt(X ** 2 - 8 * ymax)) / 2)
+    tmax = floor((X + sqrt(X ** 2 - 8 * ymin)) / 2)
+    for t in range(tmin, tmax + 1):
+        vy_by_t[t].append(vy)

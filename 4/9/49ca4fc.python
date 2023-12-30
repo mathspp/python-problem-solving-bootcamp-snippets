@@ -1,0 +1,8 @@
+from functools import reduce
+
+def from_base(digits, base=10):
+    return reduce(lambda l, r: l * base + r, digits, 0)
+
+print(from_base([1, 2, 3, 4], 10))  # 1234
+print(from_base([1, 1, 0, 1],  2))  # 13
+print(from_base([15, 15, 10], 16))  # 4090 (This is 0xffa in hexadecimal.)

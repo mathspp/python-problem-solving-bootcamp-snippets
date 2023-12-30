@@ -1,0 +1,16 @@
+from collections import Counter
+
+def fuel_cost(distance):
+    return distance * (distance + 1) // 2
+
+def total_fuel_cost(pos):
+    return sum(
+        how_many * fuel_cost(abs(pos - crab_pos))
+        for crab_pos, how_many in crabs.items()
+    )
+
+with open(INPUT_FILE, "r") as f:
+    crabs = Counter(int(num) for num in f.readline().split(","))
+
+low, high = min(crabs.keys()), max(crabs.keys())
+print(ternary_search(low, high, total_fuel_cost))

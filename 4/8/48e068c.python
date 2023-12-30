@@ -1,0 +1,11 @@
+# List of pairs:
+with open(INPUT_FILE, "r") as f:
+    polymer = f.readline().strip()
+    f.readline()  # Read the empty line.
+    rules = [line.strip().split(" -> ") for line in f]
+
+def find_character(rules, source):
+    return next(new_char for pair, new_char in rules if pair == source)
+
+print(rules[:8])
+print(find_character(rules, "SS"))

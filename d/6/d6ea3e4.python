@@ -1,0 +1,7 @@
+fold = folds[0].removeprefix(FOLD_LINE_PREFIX) # Python 3.9+
+coord, value = fold.split("=")
+value = int(value)
+one_line_folded = {(x if x < value else value - (x - value), y) if coord == "x" else (x,
+y if y < value else value - (y - value)) for x, y in points}
+# Check it matches the one we computed before in a saner way:
+print(one_line_folded == folded)

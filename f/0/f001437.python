@@ -1,0 +1,11 @@
+def dfs(graph, path_so_far):
+    *_, last_visited = path_so_far
+    if last_visited == "end":
+        return 1
+
+    return sum(
+        dfs(graph, path_so_far + [neighbour]) for neighbour in graph[last_visited]
+        if neighbour.isupper() or neighbour not in path_so_far
+    )
+
+dfs(graph, ["start"])

@@ -1,0 +1,21 @@
+from itertools import zip_longest
+
+def parse_segment(string):
+    return [list(map(int, point.split(","))) for point in string.split(" -> ")]
+
+def build_segment(segment):
+    ((x1, y1), (x2, y2)) = segment
+    dxs = range(x2 - x1 + 1) if x2 >= x1 else range(0, x2 - x1 - 1, -1)
+    dys = range(y2 - y1 + 1) if y2 >= y1 else range(0, y2 - y1 - 1, -1)
+    return [(x1 + dx, y1 + dy) for dx, dy in zip_longest(dxs, dys, fillvalue=0)]
+
+with open(INPUT_FILE, "r") as f:
+    segments = [parse_segment(line.strip()) for line in f]
+
+intersections = set()
+for idx, s1 in enumerate(segments):
+    s1_points = set(build_segment(s1))
+    for s2 in segments[idx + 1:]:
+        intersections.update({p for p in build_segment(s2) if p in s1_points})
+
+len(intersections)

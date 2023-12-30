@@ -1,0 +1,10 @@
+def build_segment(segment):
+    ((x1, y1), (x2, y2)) = segment
+    x1, x2 = sorted([x1, x2])
+    y1, y2 = sorted([y1, y2])
+    return [(x, y) for x in range(x1, x2 + 1) for y in range(y1, y2 + 1)]
+
+print(build_segment([[0, 3], [0, 5]]))
+print(build_segment([[0, 5], [0, 3]]))
+print(build_segment([[0, 3], [5, 3]]))
+print(build_segment([[5, 3], [0, 3]]))

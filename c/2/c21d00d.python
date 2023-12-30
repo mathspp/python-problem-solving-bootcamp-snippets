@@ -1,0 +1,22 @@
+from collections import Counter
+import operator
+
+with open(INPUT_FILE, "r") as f:
+    lines = f.readlines()
+
+def filter_by_count(lines, predicate):
+    bits = len(lines[0])
+    for col in range(bits):
+        if len(lines) == 1:
+            break
+        
+        counts = Counter(line[col] for line in lines)
+        pick = "0" if predicate(counts["0"], counts["1"]) else "1"
+        lines = [line for line in lines if line[col] == pick]
+
+    return lines[0]
+    
+oxygen_rating = filter_by_count(lines, operator.gt)
+co2_rating = filter_by_count(lines, operator.le)
+
+print(int(oxygen_rating, 2) * int(co2_rating, 2))

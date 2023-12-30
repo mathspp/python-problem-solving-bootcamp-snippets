@@ -1,0 +1,5 @@
+def add_count(tree_dict, string):
+    if len(string) == 1:
+        tree_dict[string] += 1
+    else:
+        add_count(tree_dict[string[0]], string[1:])

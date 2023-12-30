@@ -1,0 +1,7 @@
+assert (
+    addition(
+        parse_snailfish("[[[[4,3],4],4],[7,[[8,4],9]]]"),
+        parse_snailfish("[1,1]"),
+    ) ==
+    parse_snailfish("[[[[0,7],4],[[7,8],[6,0]]],[8,1]]")
+)

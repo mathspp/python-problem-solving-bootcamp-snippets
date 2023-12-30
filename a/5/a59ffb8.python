@@ -1,0 +1,40 @@
+from itertools import permutations
+
+BASE = "abcdefg"
+SEGMENTS = [
+    set("abcefg"),
+    set("cf"),
+    set("acdeg"),
+    set("acdfg"),
+    set("bcdf"),
+    set("abdfg"),
+    set("abdefg"),
+    set("acf"),
+    set("abcdefg"),
+    set("abcdfg"),
+]
+ALL_ORDERINGS = list(permutations(BASE))
+
+def translate(ordering, digit):
+    return {BASE[ordering.index(char)] for char in digit}
+
+with open(INPUT_FILE, "r") as f:
+    lines = f.readlines()
+
+acc = 0
+for line in lines:
+    hints, values = line.split(" | ")
+    hints = hints.split()
+    values = values.split()
+    for ordering in ALL_ORDERINGS:
+        found_all = True
+        for hint in hints:
+            if translate(ordering, hint) not in SEGMENTS:
+                found_all = False
+                break
+        if found_all:
+            # If we got here, this is the correct ordering.
+            digit_ints = [SEGMENTS.index(translate(ordering, value)) for value in values]
+            acc += int("".join(str(digit) for digit in digit_ints))
+            break
+print(acc)

@@ -1,0 +1,37 @@
+from collections import Counter
+from functools import reduce
+from itertools import chain
+
+def from_base(digits, base=10):
+    return reduce(lambda l, r: l * base + r, digits, 0)
+
+SEGMENTS = [
+    {'a', 'b', 'c', 'e', 'f', 'g'},
+    {'c', 'f'},
+    {'a', 'c', 'd', 'e', 'g'},
+    {'a', 'c', 'd', 'f', 'g'},
+    {'b', 'c', 'd', 'f'},
+    {'a', 'b', 'd', 'f', 'g'},
+    {'a', 'b', 'd', 'e', 'f', 'g'},
+    {'a', 'c', 'f'},
+    {'a', 'b', 'c', 'd', 'e', 'f', 'g'},
+    {'a', 'b', 'c', 'd', 'f', 'g'},
+]
+COUNTS = Counter(chain.from_iterable(SEGMENTS))
+SCORES = [sum(COUNTS[seg] for seg in digit) for digit in SEGMENTS]
+
+with open(INPUT_FILE, "r") as f:
+    lines = f.readlines()
+
+acc = 0
+for line in lines:
+    hints, values = [
+        [frozenset(part) for part in half.split()]
+        for half in line.split(" | ")
+    ]
+    counts = Counter(chain.from_iterable(hints))
+    scores = [sum(counts[seg] for seg in digit) for digit in hints]
+    mapping = dict(zip(hints, [SCORES.index(score) for score in scores]))
+    digits = [mapping[value] for value in values]
+    acc += from_base(digits, 10)
+print(acc)

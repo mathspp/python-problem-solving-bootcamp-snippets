@@ -1,0 +1,31 @@
+def init_tree_dict(levels):
+    if not levels:
+        return 0
+
+    return {
+        "0": init_tree_dict(levels - 1),
+        "1": init_tree_dict(levels - 1),
+    }
+
+def add_count(tree_dict, string):
+    if len(string) == 1:
+        tree_dict[string] += 1
+    else:
+        add_count(tree_dict[string[0]], string[1:])
+
+def add_up(tree_dict):
+    if isinstance(tree_dict, dict):
+        return sum(add_up(sub_dict) for sub_dict in tree_dict.values())
+    else:
+        return tree_dict
+
+# Parse the file and fill the tree_counter.
+with open(INPUT_FILE, "r") as f:
+    # Take the first line to figure out the depth we need; assumes the file isn't empty.
+    first_line = next(f)
+    tree_counter = init_tree_dict(len(first_line.strip()))
+    f.seek(0)
+    for line in f:
+        add_count(tree_counter, line.strip())
+
+print(add_up(tree_counter))  # This tells us how many lines the file had.

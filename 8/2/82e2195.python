@@ -1,0 +1,7 @@
+class Point:
+    def __init__(self, x, y, z):
+        self.x, self.y, self.z = x, y, z
+
+    def __hash__(self):
+        """Gives a unique hash to each point to allow points to be contained in sets."""
+        return hash((self.x, self.y, self.z))

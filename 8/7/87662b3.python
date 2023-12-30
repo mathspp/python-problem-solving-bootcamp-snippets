@@ -1,0 +1,18 @@
+from collections import Counter
+from time import time
+
+with open(INPUT_FILE, "r") as f:
+    crabs = Counter(int(num) for num in f.readline().split(","))
+
+fuel_costs = [distance * (distance + 1) // 2 for distance in range(max(crabs.keys()) + 1)]
+    
+start = time()
+print(min(
+    sum(
+        how_many * fuel_costs[abs(pos - position)]
+        for position, how_many in crabs.items()
+    )
+    for pos in crabs.keys()
+))
+end = time()
+print(f"Time taken: {end - start}.")

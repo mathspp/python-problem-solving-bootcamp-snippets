@@ -1,0 +1,9 @@
+def fold_point(point, coord, value):
+    x, y = point
+    if coord == "x":
+        xf = min(x, 2 * value - x)
+        yf = y
+    elif coord == "y":
+        xf = x
+        yf = min(y, 2 * value - y)
+    return (xf, yf)

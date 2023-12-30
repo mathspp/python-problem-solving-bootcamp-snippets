@@ -1,0 +1,8 @@
+def build_diagonal_segment(segment):
+    ((x1, y1), (x2, y2)) = segment
+    xs = range(x1, x2 + 1) if x2 >= x1 else range(x1, x2 - 1, -1)
+    ys = range(y1, y2 + 1) if y2 >= y1 else range(y1, y2 - 1, -1)
+    return [(x, y) for x, y in zip(xs, ys)]
+
+print(build_diagonal_segment([(0, 5), (3, 2)]))
+print(build_diagonal_segment([(3, 2), (0, 5)]))

@@ -1,0 +1,4 @@
+def build_sets_of_distances(points):
+    return [{(p2 - p1).norm_sq() for p2 in points} for p1 in points]
+
+build_sets_of_distances([Point(0, 0, 0), Point(3, 0, 0), Point(0, 4, 0)])

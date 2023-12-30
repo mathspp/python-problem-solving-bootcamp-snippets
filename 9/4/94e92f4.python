@@ -1,0 +1,9 @@
+from operator import mul
+
+def fast_power(A, n, mul=mul):
+    if n == 1:
+        return A
+    elif n % 2:
+        return mul(A, fast_power(mul(A, A), n // 2, mul))
+    else:
+        return fast_power(mul(A, A), n // 2, mul)

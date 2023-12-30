@@ -1,0 +1,16 @@
+from itertools import islice, tee
+
+WS = 3
+
+with open(INPUT_FILE, "r") as f:
+    depths = (int(line) for line in f)
+
+    prev_it, it = tee(depths, 2)    # Split iterator in two.
+    next_it = islice(it, WS, None)  # Skip WS elements from this iterator. 
+
+    count = 0
+    for prev_, next_ in zip(prev_it, next_it):
+        if prev_ < next_:
+            count += 1
+
+    print(count)

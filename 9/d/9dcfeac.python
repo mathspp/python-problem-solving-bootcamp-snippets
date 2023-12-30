@@ -1,0 +1,7 @@
+def parse_board_matrix(board_string):
+    return [
+        [int(num) for num in string_row.split()]
+        for string_row in board_string.splitlines()
+    ]
+
+parse_board_matrix(board_data[0])

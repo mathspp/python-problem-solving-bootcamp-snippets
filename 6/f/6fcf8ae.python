@@ -1,0 +1,31 @@
+from math import prod
+
+def hex_to_bin(string):
+    return bin(int(string, 16)).removeprefix("0b").zfill(4 * len(string))
+
+def evaluate(packet):
+    if len(packet) == 2:
+        return packet[1]  # Return the value of a value packet.
+    elif len(packet) == 3:
+        subs = [evaluate(sub) for sub in packet[2]]
+        t = int(packet[1], 2)
+        if t == 0:
+            return sum(subs)
+        elif t == 1:
+            return prod(subs)
+        elif t == 2:
+            return min(subs)
+        elif t == 3:
+            return max(subs)
+        elif t == 5:
+            return subs[0] > subs[1]
+        elif t == 6:
+            return subs[0] < subs[1]
+        elif t == 7:
+            return subs[0] == subs[1]
+
+with open(INPUT_FILE, "r") as f:
+    hex_string = f.read().strip()
+
+parsed, _ = packet(hex_to_bin(hex_string))
+print(evaluate(parsed[0]))

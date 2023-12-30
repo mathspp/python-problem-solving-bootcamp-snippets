@@ -1,0 +1,45 @@
+from collections import Counter, defaultdict
+from itertools import chain, pairwise  # `pairwise` is Python 3.10+
+from math import ceil
+
+import numpy as np
+
+rules = defaultdict(list)
+with open(INPUT_FILE, "r") as f:
+    polymer = f.readline().strip()
+    f.readline()  # Read the empty line.
+    for line in f:
+        pair, char = line.strip().split(" -> ")
+        rules[pair[0] + char].append(pair)
+        rules[char + pair[1]].append(pair)
+
+# Fix an ordering of all the pairs.
+# Make use of all the keys     vvvvvv ...
+pair_ordering = list(set(rules.keys()) | set(chain.from_iterable(rules.values())))
+# ... and all the values in the sublists     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+m = len(pair_ordering)
+# Build transition matrix M.
+M = np.zeros((m, m))
+for i, pair in enumerate(pair_ordering):
+    for source in rules[pair]:
+        M[i, pair_ordering.index(source)] = 1
+# Build count vector v.
+v = np.zeros((m, 1))
+for char1, char2 in pairwise(polymer):
+    v[pair_ordering.index(char1 + char2), 0] += 1
+
+# Compute pair counts after 40 steps.
+v = np.linalg.matrix_power(M, 40) @ v
+
+# Count the elements based off of the occurrences of the pairs.
+element_counts = Counter()
+for idx, pair in enumerate(pair_ordering):
+    element_counts[pair[0]] += v[idx, 0]
+    element_counts[pair[1]] += v[idx, 0]
+
+for element, count in element_counts.items():
+    element_counts[element] = ceil(count / 2)
+
+# Count the most and least common letters.
+print(max(element_counts.values()) - min(element_counts.values()))

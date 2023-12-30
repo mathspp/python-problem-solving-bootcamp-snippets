@@ -1,0 +1,14 @@
+def score_board_by_status_matrix(last_drawn, board, status):
+    acc = 0
+    for row, bitmask in zip(board, status):
+        while row:
+            acc += row[-1] * (not bitmask & 1)
+            row = row[:-1]  # Drop the last element of the row,
+            bitmask >>= 1   # and the rightmost bit of the bitmask.
+    return acc * last_drawn
+
+score_board_by_status_matrix(*bingo_simulation(
+    numbers,
+    boards,
+    [empty_bit_rows(len(boards[0])) for _ in boards],
+))

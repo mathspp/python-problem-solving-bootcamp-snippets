@@ -1,0 +1,45 @@
+from itertools import product
+from queue import PriorityQueue  # <- VERY useful
+from time import time
+
+def neighbour_positions(r, c, grid):
+    return {
+        (r_, c_) for r_, c_ in [(r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)]
+        if 0 <= r_ < len(grid) and 0 <= c_ < len(grid[0])
+    }
+
+with open(INPUT_FILE, "r") as f:
+    grid = [[int(n) for n in line.strip()] for line in f]
+
+# Compute full map.
+R, C = len(grid), len(grid[0])
+
+full_map = [[None for _ in range(5 * C)] for _ in range(5 * R)]
+for r, c in product(range(R), range(C)):
+    for mr, mc in product(range(5), repeat=2):
+        new_value = ((grid[r][c] + mr + mc - 1) % 9) + 1
+        full_map[r + mr * R][c + mc * C] = new_value
+# Rename it to `grid`:
+grid = full_map
+    
+SOURCE, DEST = (0, 0), (len(grid) - 1, len(grid[0]) - 1)
+
+start = time()  # Start a timer.
+
+visited = set()  # Set of nodes that have already been reached.
+queue = PriorityQueue()
+queue.put((0, SOURCE))  # Queue of possible paths to extend.
+while not queue.empty():
+    cost, node = queue.get()
+
+    if node == DEST:  # We just reached the destination! Return :)
+        break
+    elif node in visited:  # If we've been here already, nothing to do.
+        continue
+
+    visited.add(node)
+    for r, c in neighbour_positions(*node, grid):
+        queue.put((grid[r][c] + cost, (r, c)))
+
+end = time()
+print(f"Found shortest path of total risk level {cost} in {end - start}s.")

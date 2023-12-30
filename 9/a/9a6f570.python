@@ -1,0 +1,11 @@
+from collections import Counter
+
+counter = Counter()
+
+for segment in segments:
+    ((x1, y1), (x2, y2)) = segment
+    if x1 != x2 and y1 != y2:
+        continue
+    counter += Counter(build_segment(segment))
+
+sum(count > 1 for count in counter.values())

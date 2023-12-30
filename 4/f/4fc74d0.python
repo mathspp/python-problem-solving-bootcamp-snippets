@@ -1,0 +1,4 @@
+def parse_snailfish(string):
+    return [int(char) if char in "0123456789" else char for char in string]
+
+parse_snailfish("[[1,2],[3,[4,5]]]")

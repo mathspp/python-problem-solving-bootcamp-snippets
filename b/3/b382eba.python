@@ -1,0 +1,5 @@
+from itertools import chain
+
+parsed = map(lambda line: line.split(" | ")[1].split(), lines)
+acc = sum(len(signals) in LENGTHS for signals in chain.from_iterable(parsed))
+print(acc)

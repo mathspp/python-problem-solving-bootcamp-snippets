@@ -1,0 +1,13 @@
+def score_board_from_draw_indices(board, numbers, bingo_at):
+    acc = 0
+    for number in numbers[bingo_at + 1:]:
+        if number in board:
+            acc += number
+    return acc * numbers[bingo_at]
+
+bingos = [bingo_at(board, numbers) for board in boards]
+
+for picker in [min, max]:
+    last_drawn_idx = picker(finishing_moves)
+    board_idx = finishing_moves.index(last_drawn_idx)
+    print(score_board_from_draw_indices(boards[board_idx], numbers, last_drawn_idx))

@@ -1,0 +1,23 @@
+from itertools import cycle, islice
+
+with open(INPUT_FILE, "r") as f:
+    positions = [int(line.strip().split()[-1]) for line in f]
+
+positions = [
+    cycle(list(range(pos + 1, 11)) + list(range(1, pos + 1)))
+    for pos in positions
+]
+
+scores = [0] * 2
+player, rolls, die = 0, 0, cycle(range(1, 101))
+
+die = cycle(range(1, 101))
+
+while max(scores) < 1000:
+    positions[player] = islice(positions[player], sum(islice(die, 3)) - 1, None)
+    scores[player] += next(positions[player])
+
+    player = (player + 1) % len(positions)
+    rolls += 3
+
+print(min(scores) * rolls)

@@ -1,0 +1,18 @@
+def filter_by_count_with_col(lines, predicate, col=0):
+    if len(lines) == 1:
+        return lines[0]
+    
+    counts = Counter(line[col] for line in lines)
+    pick = "0" if predicate(counts["0"], counts["1"]) else "1"
+    lines = [line for line in lines if line[col] == pick]
+    return filter_by_count_with_col(lines, predicate, col + 1)
+        
+
+def filter_by_count_with_prefix(lines, predicate):
+    if len(lines) == 1:
+        return lines[0]
+
+    counts = Counter(line[0] for line in lines)
+    pick = "0" if predicate(counts["0"], counts["1"]) else "1"
+    lines = [line[1:] for line in lines if line[0] == pick]
+    return pick + filter_by_count_with_prefix(lines, predicate)

@@ -1,0 +1,10 @@
+def parse_snailfish(snail):
+    """Reads a snail that is assumed to only have 1-digit values."""
+    values, depths, depth = [], [], 0
+    for char in snail:
+        depth += (char == "[") - (char == "]")
+        if char == ",":
+            depths.append(depth)
+        elif char in "0123456789":
+            values.append(int(char))
+    return values, depths

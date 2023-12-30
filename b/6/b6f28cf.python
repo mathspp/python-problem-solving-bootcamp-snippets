@@ -1,0 +1,6 @@
+def matmul(A, B, mod=None):
+    """Perform matrix multiplication between A and B, optionally modulo mod."""
+    res = [[sum(a * b for a, b in zip(row, col)) for col in zip(*B)] for row in A]
+    if mod is not None:
+        res = [[val % mod for val in row] for row in res]
+    return res

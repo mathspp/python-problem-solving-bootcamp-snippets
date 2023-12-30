@@ -1,0 +1,19 @@
+def bingo_simulation(nums_drawn, boards, statuses):
+    board_size = int(len(boards[0]) ** 0.5)  # Square root of length gives square board size.
+    # Go over each number drawn.
+    for num_drawn in nums_drawn:
+        # Iterate over all boards ...
+        for board, status in zip(boards, statuses):
+            update_status(board, status, num_drawn)
+            # ... and if there is a bingo, ...
+            if flat_board_has_bingo(status, board_size):
+                return num_drawn, board, status  # ... return all information.
+            
+with open(INPUT_FILE) as f:
+    contents = f.read().strip().split("\n\n")
+
+numbers, *board_data = contents
+numbers = [int(num) for num in numbers.split(",")]  # Make sure the numbers are integers.
+boards = [parse_board_flat(data) for data in board_data]
+
+print(bingo_simulation(numbers, boards, [[] for _ in boards]))

@@ -1,0 +1,4 @@
+FOLD_LINE_PREFIX = "fold along "
+
+fold = folds[0][len(FOLD_LINE_PREFIX):]
+print(fold)

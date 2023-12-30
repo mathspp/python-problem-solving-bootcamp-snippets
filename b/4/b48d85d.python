@@ -1,0 +1,15 @@
+def boolean_matrix_has_bingo(matrix):
+    for i in range(len(matrix)):
+        row, col = True, True  # Check a row and a column at the same time.
+        for j in range(len(matrix)):
+            row = row and matrix[i][j]
+            col = col and matrix[j][i]
+        if row or col:
+            return True
+    return False
+
+boolean_matrix_has_bingo([
+    [True, False, False],
+    [True, False, True],
+    [True, True, False],
+])

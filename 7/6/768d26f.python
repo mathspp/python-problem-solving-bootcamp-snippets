@@ -1,0 +1,18 @@
+horiz_pos, depth, aim = 0, 0, 0
+
+with open(INPUT_FILE, "r") as f:
+    for line in f:
+        command, value = line.split()
+        value = int(value)
+
+        if command == "forward":
+            horiz_pos += value
+            depth += aim * value
+        elif command == "up":
+            aim -= value
+        elif command == "down":
+            aim += value
+        else:
+            raise ValueError("Unknown command.")
+
+print(horiz_pos * depth)

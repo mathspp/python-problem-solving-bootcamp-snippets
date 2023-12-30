@@ -1,0 +1,7 @@
+def points_of_view_match(references, others, point_matching_threshold):
+    """Check if two POVs match and return indices of matching points."""
+    for ref_idx, reference in enumerate(references):
+        for other_idx, other in enumerate(others):
+            if len(set(reference) & set(other)) >= point_matching_threshold - 1:
+                return True, ref_idx, other_idx
+    return False, None, None

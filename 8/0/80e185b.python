@@ -1,0 +1,21 @@
+from collections import Counter
+from itertools import pairwise  # Python 3.10+
+
+# A dictionary mapping pairs to new characters:
+with open(INPUT_FILE, "r") as f:
+    polymer = f.readline().strip()
+    f.readline()  # Read the empty line.
+    rules = dict(line.strip().split(" -> ") for line in f)
+
+# Pair substition into the template polymer.
+for _ in range(10):
+    extended_polymer = []
+    for char1, char2 in pairwise(polymer):
+        extended_polymer.append(char1)
+        extended_polymer.append(rules[char1 + char2])
+    extended_polymer.append(polymer[-1])
+    polymer = "".join(extended_polymer)
+
+# Count the most and least common letters.
+counts = Counter(polymer)
+print(max(counts.values()) - min(counts.values()))

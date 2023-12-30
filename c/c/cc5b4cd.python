@@ -1,0 +1,12 @@
+def empty_boolean_matrix(size):
+    return [[False] * size for _ in range(size)]
+
+def bingo_simulation(nums_drawn, boards, statuses):
+    # Go over each number drawn.
+    for num_drawn in nums_drawn:
+        # Iterate over all boards ...
+        for board, status in zip(boards, statuses):
+            update_status(board, status, num_drawn)
+            # ... and if there is a bingo, ...
+            if boolean_matrix_has_bingo(status):
+                return num_drawn, board, status  # ... return all information.

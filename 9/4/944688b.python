@@ -1,0 +1,26 @@
+from functools import reduce  # <--
+
+def state_update(state, instruction):
+    horiz_pos, depth, aim = state
+    command, value = instruction
+
+    if command == "forward":
+        horiz_pos += value
+        depth += aim * value
+    elif command == "up":
+        aim -= value
+    elif command == "down":
+        aim += value
+    else:
+        raise ValueError("Unknown command.")
+    
+    return (horiz_pos, depth, aim)
+
+
+with open(INPUT_FILE, "r") as f:
+    instructions = [
+        (command, int(value)) for command, value in map(str.split, f)
+    ]
+
+final_state = reduce(state_update, instructions, (0, 0, 0))  # <--
+print(final_state[0] * final_state[1])

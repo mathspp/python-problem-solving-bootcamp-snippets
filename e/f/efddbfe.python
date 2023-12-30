@@ -1,0 +1,13 @@
+with open(INPUT_FILE, "r") as f:
+    fish_input = [int(num) for num in f.readline().split(",")]
+
+fish_pop = [0] * 9
+for fish in fish_input:
+    fish_pop[fish] += 1
+
+pointer = 0
+for _ in range(256):
+    fish_pop[pointer + 7] += fish_pop[pointer]
+    pointer += 1
+
+print(sum(fish_pop))

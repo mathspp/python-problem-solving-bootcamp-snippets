@@ -1,0 +1,6 @@
+def update_status(board, status, number):
+    board_size = int(len(board) ** 0.5)
+    try:
+        status.append(divmod(board.index(number), board_size))
+    except ValueError:
+        pass

@@ -1,0 +1,5 @@
+die = cycle(range(1, 101))
+for _ in range(10):
+    for roll, _ in zip(die, range(3)):
+        print(f"{roll} ", end="")
+    print()

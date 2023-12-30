@@ -1,0 +1,6 @@
+from itertools import product
+
+print(max(
+    magnitude(addition(num1, num2))
+    for num1, num2 in product(snailfish_numbers, repeat=2) if num1 != num2
+))

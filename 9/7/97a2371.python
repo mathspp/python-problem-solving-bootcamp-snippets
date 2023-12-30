@@ -1,0 +1,14 @@
+from time import time
+
+with open(INPUT_FILE, "r") as f:
+    crabs = [int(num) for num in f.readline().split(",")]
+
+fuel_costs = [distance * (distance + 1) // 2 for distance in range(max(crabs) + 1)]
+    
+start = time()
+print(min(
+    sum(fuel_costs[abs(pos - crab)] for crab in crabs)
+    for pos in range(min(crabs), max(crabs) + 1)
+))
+end = time()
+print(f"Time taken: {end - start}.")

@@ -1,0 +1,7 @@
+pos = min(crabs)
+last_values = []
+while len(last_values) < 2 or last_values[-1] < last_values[-2]:
+    pos += 1
+    last_values.append(sum(abs(pos - crab) for crab in crabs))
+    last_values = last_values[-2:]  # “The last 2 values of `last_values`.”
+print(last_values[-2])

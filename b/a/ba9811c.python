@@ -1,0 +1,7 @@
+from functools import reduce
+
+folded = reduce(
+    lambda points, fold: {fold_point(point, fold[0], int(fold[1])) for point in points},
+    folds,
+    points,
+)

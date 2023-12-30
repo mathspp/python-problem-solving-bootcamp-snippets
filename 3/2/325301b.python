@@ -1,0 +1,12 @@
+from collections import Counter
+
+# Digit i uses SEGMENTS[i] segments.
+SEGMENTS = [6, 2, 5, 5, 4, 5, 6, 3, 7, 6]
+
+with open(INPUT_FILE, "r") as f:
+    lines = f.readlines()
+
+c = Counter()
+for line in lines:
+    c.update(len(hint) for hint in line.split(" | ")[1].split())
+print(sum(c[SEGMENTS[i]] for i in [1, 4, 7, 8]))

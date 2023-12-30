@@ -1,0 +1,8 @@
+from functools import reduce
+from operator import mul
+
+def prod(iterable):
+    return reduce(mul, iterable, 1)
+
+lengths = [len(find_basin(grid, r, c)) for r, c in low_points]
+print(prod(sorted(lengths)[-3:]))

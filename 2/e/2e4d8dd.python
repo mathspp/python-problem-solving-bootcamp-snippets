@@ -1,0 +1,28 @@
+def sign(x):
+    if x > 0: return 1
+    elif x < 0: return -1
+    else: return 0
+
+class Point:
+    def __init__(self, x, y, z):
+        self.x, self.y, self.z = x, y, z
+
+    def __eq__(self, other):
+        """Check if the two points are equal."""
+        return (self.x, self.y, self.z) == (other.x, other.y, other.z)
+
+    def rotate(self, rot):
+        coords = [None, self.x, self.y, self.z]
+        return Point(
+            sign(rot[0]) * coords[abs(rot[0])],
+            sign(rot[1]) * coords[abs(rot[1])],
+            sign(rot[2]) * coords[abs(rot[2])],
+        )
+
+A = Point(3, 2, 0)
+assert Point(-3, -2, 0).rotate([-1, -2, 3]) == A
+assert Point(3, 0, -2).rotate([1, -3, 2]) == A
+
+B = Point(0, 0, 2)
+assert Point(0, 0, 2).rotate([-1, -2, 3]) == B
+assert Point(0, 2, 0).rotate([1, -3, 2]) == B

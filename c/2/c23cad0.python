@@ -1,0 +1,30 @@
+from queue import LifoQueue
+
+OPENING, CLOSING = "([{<", ")]}>"
+CLOSE_WITH = dict(zip(OPENING, CLOSING))
+SYNTAX_SCORES = dict(zip(CLOSING, [3, 57, 1197, 25137]))
+CLOSING_SCORES = dict(zip(CLOSING, range(1, 5)))
+
+with open(INPUT_FILE, "r") as f:
+    lines = f.readlines()
+
+completed_scores = []
+for line in lines:
+    stack = LifoQueue()
+    for char in line:
+        if char in OPENING:
+            stack.put(char)
+        elif char in CLOSING:
+            op = stack.get()
+            if char != CLOSE_WITH[op]:
+                break  # Removed the Boolean flag, a `break` is enough.
+    else:
+        points = []
+        while not stack.empty():
+            points.append(CLOSING_SCORES[CLOSE_WITH[stack.get()]])
+        score = 0
+        for n in points:
+            score = score * 5 + n
+        completed_scores.append(score)
+
+print(sorted(completed_scores)[len(completed_scores)//2])

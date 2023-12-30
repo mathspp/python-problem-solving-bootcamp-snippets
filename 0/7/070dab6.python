@@ -1,0 +1,21 @@
+def spl(n):
+    r = n % 2
+    return [int((n - r) / 2), int((n - r) / 2 + r)]
+assert spl(11) == [5, 6]
+
+def spl(n):
+    r = n % 2
+    return [int(n / 2), int(n / 2) + r]
+assert spl(11) == [5, 6]
+
+def spl(n):
+    return [int(n / 2), int((n + 1) / 2)]
+assert spl(11) == [5, 6]
+
+def spl(n):
+    return [n // 2, (n + 1) // 2]
+assert spl(11) == [5, 6]
+
+def spl(n):
+    return [round(n / 2 - 0.1), round(n / 2 + 0.1)]
+assert spl(11) == [5, 6]

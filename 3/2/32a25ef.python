@@ -1,0 +1,5 @@
+for line in lines:
+    hints, values = map(str.split, line.split(" | "))
+    print(hints)
+    print(values)
+    break

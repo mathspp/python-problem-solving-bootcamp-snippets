@@ -1,0 +1,53 @@
+from functools import reduce
+
+BASE = frozenset("abcdefg")
+
+def from_base(digits, base=10):
+    return reduce(lambda l, r: l * base + r, digits, 0)
+
+def comp(a_set):
+    """Returns the segments not used by a_set."""
+    return BASE - a_set
+
+def with_length(sets, length):
+    """Returns all sets with the given length."""
+    return {s for s in sets if len(s) == length}
+
+def deduce(hints):
+    """Deduce which set is which digit from a set containing all digits."""
+    # Start by finding the obvious digits
+    one = with_length(hints, 2).pop()
+    four = with_length(hints, 4).pop()
+    seven = with_length(hints, 3).pop()
+    eight = with_length(hints, 7).pop()
+    
+    # Distinguish between 2, 3, and 5
+    two_three_five = with_length(hints, 5)
+    three = {s for s in two_three_five if one < s}.pop()
+    two_five = two_three_five - {three}
+    two = {s for s in two_five if comp(four) < s}.pop()
+    five = (two_five - {two}).pop()
+    
+    # Distinguish between 0, 6, and 9
+    zero_six_nine = with_length(hints, 6)
+    nine = {s for s in zero_six_nine if three < s}.pop()
+    zero_six = zero_six_nine - {nine}
+    six = {s for s in zero_six if comp(one) < s}.pop()
+    zero = (zero_six - {six}).pop()
+    
+    return [zero, one, two, three, four, five, six, seven, eight, nine]
+
+
+with open(INPUT_FILE, "r") as f:
+    lines = f.readlines()
+
+acc = 0
+for line in lines:
+    hints, values = [
+        [frozenset(part) for part in half.split()]
+        for half in line.split(" | ")
+    ]
+    correct_digits = deduce(hints)
+    digits = [correct_digits.index(digit) for digit in values]
+    acc += from_base(digits, 10)
+print(acc)

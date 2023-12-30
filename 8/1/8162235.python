@@ -1,0 +1,11 @@
+# Two separate lists:
+with open(INPUT_FILE, "r") as f:
+    polymer = f.readline().strip()
+    f.readline()  # Read the empty line.
+    rules = [line.strip().split(" -> ") for line in f]
+
+# Separate pairs and (corresponding) new characters.
+pairs, new_chars = zip(*rules)
+
+print(pairs[:8])
+print(new_chars[:8])

@@ -1,0 +1,7 @@
+def fast_power(A, n):
+    if n == 1:
+        return A
+    elif n % 2:
+        return A * fast_power(A * A, n // 2)
+    else:
+        return fast_power(A * A, n // 2)

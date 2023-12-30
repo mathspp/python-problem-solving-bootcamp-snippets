@@ -1,0 +1,5 @@
+with open(INPUT_FILE, "r") as f:
+    depths = (int(line) for line in f)
+    le = lambda l, r: l < r
+
+    print(sum(le(*args) for args in pairwise(depths)))

@@ -1,0 +1,4 @@
+def find_character(pairs, new_chars, source):
+    return new_chars[pairs.index(source)]
+
+print(find_character(pairs, new_chars, "SS"))

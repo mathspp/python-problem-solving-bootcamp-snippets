@@ -1,0 +1,32 @@
+def neighbouring_positions(grid, coords):
+    r, c = coords
+    shifts = [
+        (r + 1, c), (r + 1, c + 1), (r, c + 1), (r - 1, c + 1),
+        (r - 1, c), (r - 1, c - 1), (r, c - 1), (r + 1, c - 1),
+    ]
+    return [coords_ for coords_ in shifts if coords_ in grid]
+
+with open(INPUT_FILE, "r") as f:
+    grid = {
+        (r, c): int(n)
+        for r, line in enumerate(f) for c, n in enumerate(line.strip())
+    }
+
+flashes = 0
+for _ in range(100):
+    
+    to_increment = list(grid.keys())
+    flashed = set()  # To keep track of the octopuses that already flashed.
+    while to_increment:
+        octopus = to_increment.pop()
+        if octopus in flashed:
+            continue
+
+        grid[octopus] = (grid[octopus] + 1) % 10
+        if grid[octopus] == 0:
+            flashed.add(octopus)
+            to_increment.extend(neighbouring_positions(grid, octopus))
+
+    flashes += len(flashed)
+
+print(flashes)

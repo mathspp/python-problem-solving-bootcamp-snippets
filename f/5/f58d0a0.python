@@ -1,0 +1,37 @@
+def neighbouring_positions(grid, coords):
+    r, c = coords
+    shifts = [
+        (r + 1, c), (r + 1, c + 1), (r, c + 1), (r - 1, c + 1),
+        (r - 1, c), (r - 1, c - 1), (r, c - 1), (r + 1, c - 1),
+    ]
+    return [coords_ for coords_ in shifts if coords_ in grid]
+
+with open(INPUT_FILE, "r") as f:
+    grid = {
+        (r, c): int(n)
+        for r, line in enumerate(f) for c, n in enumerate(line.strip())
+    }
+
+flashes = 0
+for _ in range(100):
+    to_flash = []
+
+    for coords in grid.keys():
+        grid[coords] += 1
+        if grid[coords] == 10:
+            flashes += 1
+            to_flash.append(coords)
+
+    while to_flash:
+        coords = to_flash.pop()
+        grid[coords] = 0  # Reset energy level immediately.
+        for coords_ in neighbouring_positions(grid, coords):
+            if grid[coords_] == 0:  # This octopus has flashed recently, so skip it.
+                continue
+
+            grid[coords_] += 1
+            if grid[coords_] == 10:
+                flashes += 1
+                to_flash.append(coords_)
+
+print(flashes)

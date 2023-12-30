@@ -1,0 +1,29 @@
+from math import prod
+from operator import eq, gt, lt
+
+def hex_to_bin(string):
+    return bin(int(string, 16)).removeprefix("0b").zfill(4 * len(string))
+
+DISPATCH_TABLE = {
+    0: sum,
+    1: prod,
+    2: min,
+    3: max,
+    5: lambda ps: gt(*ps),
+    6: lambda ps: lt(*ps),
+    7: lambda ps: eq(*ps),
+}
+
+def evaluate(packet):
+    if len(packet) == 2:
+        return packet[1]  # Return the value of a value packet.
+    elif len(packet) == 3:
+        subs = [evaluate(sub) for sub in packet[2]]
+        t = int(packet[1], 2)
+        return DISPATCH_TABLE[t](subs)
+
+with open(INPUT_FILE, "r") as f:
+    hex_string = f.read().strip()
+
+parsed, _ = packet(hex_to_bin(hex_string))
+print(evaluate(parsed[0]))

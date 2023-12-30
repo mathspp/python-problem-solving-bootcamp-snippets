@@ -1,0 +1,14 @@
+def magnitude(snailfish_num):
+    stack = []
+    for token in snailfish_num:
+        if isinstance(token, int):
+            stack.append(token)
+        elif token == "]":
+            right, left = stack.pop(), stack.pop()
+            stack.append(3 * left + 2 * right)
+    return stack[0]
+
+assert (
+    magnitude(parse_snailfish("[[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]")) ==
+    3488
+)

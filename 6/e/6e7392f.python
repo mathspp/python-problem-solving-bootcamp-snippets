@@ -1,0 +1,8 @@
+from collections import deque
+
+pos = min(crabs)
+last_values = deque([], 2)  # Initialise an empty `deque` with max length of 2.
+while len(last_values) < 2 or last_values[-1] < last_values[-2]:
+    pos += 1
+    last_values.append(sum(abs(pos - crab) for crab in crabs))
+print(last_values[-2])

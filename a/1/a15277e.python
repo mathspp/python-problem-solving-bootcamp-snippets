@@ -1,0 +1,14 @@
+matrix = [
+    ["short", "longer", "short"],
+    ["longer", "really long", "longer"],
+    ["short", "longer", "short"],
+]
+for r, row in enumerate(matrix):
+    for c, val in enumerate(row):
+        up = matrix[r - 1][c] if r > 0 else val + " "
+        down = matrix[r + 1][c] if r < len(matrix) - 1 else val + " "
+        left = matrix[r][c - 1] if c > 0 else val + " "
+        right = matrix[r][c + 1] if c < len(matrix) - 1 else val + " "
+        L = len(val)
+        if L < len(up) and L < len(down) and L < len(left) and L < len(right):
+            print(val)

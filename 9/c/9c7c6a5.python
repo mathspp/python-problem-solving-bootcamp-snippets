@@ -1,0 +1,8 @@
+risk = 0
+for r, row in enumerate(grid):
+    for c, val in enumerate(row):
+        if val == 9:
+            continue
+        if min(neighbour[r][c] for neighbour in NEIGHBOURS) > val:
+            risk += val + 1
+print(risk)

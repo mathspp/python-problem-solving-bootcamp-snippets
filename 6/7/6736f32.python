@@ -1,0 +1,8 @@
+with open(INPUT_FILE, "r") as f:
+    graph_edges = [line.strip().split("-") for line in f.readlines()]
+graph_edges += [edge[::-1] for edge in graph_edges]
+
+def neighbours(graph, cave):
+    return [dest for source, dest in graph if source == cave]
+
+neighbours(graph_edges, "start")

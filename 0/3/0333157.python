@@ -1,0 +1,17 @@
+count = 0
+paths_being_built = deque([["start"]])
+while paths_being_built:
+    path = *_, last_visited = paths_being_built.pop()  # <-
+    if last_visited == "end":
+        count += 1
+        continue
+
+    paths_being_built.extendleft(
+        [
+            path + [neighbour]
+            for neighbour in graph[last_visited]  # <-
+            if not (neighbour.islower() and neighbour in path)  # <-
+        ]
+    )
+
+print(count)

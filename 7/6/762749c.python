@@ -1,0 +1,10 @@
+risk = 0
+for r, row in enumerate(grid):
+    for c, val in enumerate(row):
+        up = grid[r - 1][c] if r > 0 else val + 1
+        down = grid[r + 1][c] if r < len(grid) - 1 else val + 1
+        left = grid[r][c - 1] if c > 0 else val + 1
+        right = grid[r][c + 1] if c < len(grid) - 1 else val + 1
+        if val < up and val < down and val < left and val < right:
+            risk += val + 1
+print(risk)

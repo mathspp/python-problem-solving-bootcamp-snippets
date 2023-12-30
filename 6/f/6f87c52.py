@@ -1,0 +1,3 @@
+for number in numbers_to_draw:
+    for board in boards:
+        ...

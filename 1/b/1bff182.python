@@ -1,0 +1,9 @@
+with open(INPUT_FILE, "r") as f:
+    depths = f.readlines()
+
+count = 0
+for next_idx, num in enumerate(depths[:-1], start=1):
+    if int(num) < int(depths[next_idx]):
+        count += 1
+
+print(count)

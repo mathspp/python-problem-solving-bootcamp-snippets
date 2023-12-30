@@ -1,0 +1,16 @@
+xrange = range(
+    ceil((-1 + sqrt(1 + 8 * xmin)) / 2),
+    1 + floor((-1 + sqrt(1 + 8 * xmax)) / 2),
+)
+x_steps = {}
+for vx in xrange:
+    # Probe will stop going right inside the target, but check
+    # if it was already _on_ the target in the previous steps.
+    t, x, vx_ = vx, vx * (vx + 1) // 2, 1
+    while xmin <= x:  # Walk left.
+        x -= vx_
+        vx_ += 1
+        t -= 1
+    x_steps[vx] = t + 1  # We took 1 step left too many.
+    continue
+x_steps

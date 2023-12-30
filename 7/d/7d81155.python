@@ -1,0 +1,23 @@
+with open(INPUT_FILE, "r") as f:
+    positions = [int(line.strip().split()[-1]) for line in f]
+
+scores = [0] * 2
+player, rolls, die = 0, 0, 1
+
+while max(scores) < 1000:
+    roll = 0
+    for _ in range(3):
+        roll += die
+        die = die % 100 + 1
+        rolls += 1
+    for _ in range(roll):
+        positions[player] += 1
+        if positions[player] > 10:
+            positions[player] = 1
+    scores[player] += positions[player]
+
+    player += 1
+    if player >= len(positions):
+        player = 0
+
+print(min(scores) * rolls)

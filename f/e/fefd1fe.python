@@ -1,0 +1,19 @@
+import numpy as np
+from scipy.signal import convolve2d
+
+def enhance(image, algorithm, padding):
+    kernel = np.array([2 ** n for n in range(9)]).reshape((3, 3))
+    new_image = convolve2d(image, kernel, fillvalue=padding)
+    return algorithm[new_image], algorithm[-padding]
+
+with open(INPUT_FILE, "r") as f:
+    algo, data = f.read().split("\n\n")
+
+algo = np.array([int(char == "#") for char in algo])
+image = np.array([[int(char == "#") for char in line] for line in data.splitlines()])
+padding = 0
+
+for _ in range(50):
+    image, padding = enhance(image, algo, padding)
+
+print(image.sum())

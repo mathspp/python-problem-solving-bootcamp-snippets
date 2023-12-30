@@ -1,0 +1,12 @@
+risk = 0
+for r, row in enumerate(grid):
+    for c, val in enumerate(row):
+        values = [
+            grid[r - 1][c] if r > 0 else float("inf"),
+            grid[r + 1][c] if r < len(grid) - 1 else float("inf"),
+            grid[r][c - 1] if c > 0 else float("inf"),
+            grid[r][c + 1] if c < len(grid) - 1 else float("inf"),
+        ]
+        if min(values) > val:
+            risk += val + 1
+print(risk)

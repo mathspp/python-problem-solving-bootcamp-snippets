@@ -1,0 +1,6 @@
+with open(INPUT_FILE, "r") as f:
+    depths = (int(line) for line in f)
+
+    count = sum(prev_ < next_ for prev_, next_ in pairwise(depths))
+
+    print(count)

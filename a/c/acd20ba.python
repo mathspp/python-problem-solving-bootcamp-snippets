@@ -1,0 +1,4 @@
+from itertools import product
+
+results = set(sum(rolls) for rolls in product(range(1, 4), repeat=3))
+print(results)

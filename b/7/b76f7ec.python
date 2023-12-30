@@ -1,0 +1,8 @@
+from statistics import median
+
+with open(INPUT_FILE, "r") as f:
+    crabs = [int(num) for num in f.readline().split(",")]
+
+pos = round(median(crabs))
+fuel_cost = sum(abs(crab - pos) for crab in crabs)
+print(fuel_cost)

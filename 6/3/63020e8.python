@@ -1,0 +1,5 @@
+class Point:
+    def __init__(self, x, y, z):
+        self.x, self.y, self.z = x, y, z
+
+print(Point(1, 2, 3) + Point(2, 3, 4))

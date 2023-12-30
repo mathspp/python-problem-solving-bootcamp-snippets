@@ -1,0 +1,63 @@
+def parse_packet(string):
+    version = int(string[:3], 2)
+    type_ = int(string[3:6], 2)
+    string = string[6:]  # Drop parsed header bits.
+
+    # If this is a value packet, extract the value.
+    if type_ == 4:
+        value = []
+        while True:
+            bit, *next_group = string[:5]
+            value.extend(next_group)
+            string = string[5:]
+            if bit == "0":
+                break
+        value = int("".join(value), 2)
+        return (version, value), string
+
+    # If this is an operator packet, extract sub packets.
+    else:
+        length_type_id = string[0]
+
+        # Distinguish between length given by bits and by number of packets.
+        if length_type_id == "0":
+            # Convert binary bit length to decimal.
+            bit_length = int(string[1:16], 2)
+            string = string[16:]
+            # Get sub packets from the section of length `bit_length`.
+            to_parse, sub_packets = string[:bit_length], []
+            while to_parse:
+                packet, to_parse = parse_packet(to_parse)
+                sub_packets.append(packet)
+            # Drop used bits from the string.
+            string = string[bit_length:]
+
+        elif length_type_id == "1":
+            # Convert binary packet amount to decimal.
+            packet_amount = int(string[1:12], 2)
+            string = string[12:]
+            sub_packets = []
+            # Read the pre-determined number of packets.
+            for _ in range(packet_amount):
+                packet, string = parse_packet(string)
+                sub_packets.append(packet)
+
+        return (version, type_, sub_packets), string
+
+def hex_to_bin(string):
+    return bin(int(string, 16)).removeprefix("0b").zfill(4 * len(string))
+
+def sum_versions(packet):
+    """Sum the versions of the given packet and all (deeply) nested sub-packets."""
+
+    if len(packet) == 2:
+        return packet[0]
+    elif len(packet) == 3:
+        return packet[0] + sum(sum_versions(sub) for sub in packet[2])
+
+
+with open(INPUT_FILE, "r") as f:
+    hex_string = f.read().strip()
+
+parsed, _ = parse_packet(hex_to_bin(hex_string))
+print(sum_versions(parsed))

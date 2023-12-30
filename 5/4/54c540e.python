@@ -1,0 +1,18 @@
+total_error_score = 0
+completed_scores = []
+for line in lines:
+    stack = []
+    for char in line:
+        if char in OPENING:
+            stack.append(char)
+        elif char in CLOSING:
+            op = stack.pop()
+            if char != CLOSE_WITH[op]:
+                total_error_score += SYNTAX_SCORES[char]
+                break
+    else:
+        points = [CLOSING_SCORES[char] for char in stack[::-1]]
+        completed_scores.append(from_base(points, 5))
+
+print(total_error_score)
+print(median(completed_scores))

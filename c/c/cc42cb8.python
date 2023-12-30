@@ -1,0 +1,16 @@
+class Parser:
+    def __init__(self, parse=None):
+        self.parse = parse
+
+    def __call__(self, input_):
+        return self.parse(input_)
+
+class Char(Parser):
+    """Parses a single (given) character."""
+    def __init__(self, char):
+        def parse(input_):
+            if input_[0] == char:
+                return ([char], input_[1:])
+            return None, input_
+        super().__init__(parse)
+        self.char = char

@@ -1,0 +1,32 @@
+from itertools import product
+
+def process_line(line):
+    return [int(n) for n in line.strip()]
+
+with open(INPUT_FILE, "r") as f:
+    grid = Grid.from_rows(map(process_line, f))
+
+print(grid)
+
+grid_size = grid.width * grid.height
+flashes_per_step = []
+while not flashes_per_step or flashes_per_step[-1] != grid_size:
+
+    to_increment = list(product(range(grid.width), range(grid.height)))
+    flashed = set()
+    while to_increment:
+        octopus = to_increment.pop()
+        if octopus in flashed:
+            continue
+
+        grid[octopus] = (grid[octopus] + 1) % 10
+        if grid[octopus] == 0:
+            flashed.add(octopus)
+            to_increment.extend(grid.adjacent_positions(*octopus, diagonals=True))
+
+    flashes_per_step.append(len(flashed))
+
+# Part 1 is the total flashes in the first 100 steps.
+print(sum(flashes_per_step[:100]))
+# Part 2 is how long it takes for all octopuses to flash together.
+print(len(flashes_per_step))

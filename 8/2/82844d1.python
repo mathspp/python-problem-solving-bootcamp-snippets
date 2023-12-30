@@ -1,0 +1,4 @@
+s = "coder"
+print(s[:-1])
+print(s[1:])
+print(list(zip(s[:-1], s[1:])))

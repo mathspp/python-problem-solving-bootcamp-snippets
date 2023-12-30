@@ -1,0 +1,21 @@
+from collections import defaultdict
+
+graph = defaultdict(list)
+with open(INPUT_FILE, "r") as f:
+    for line in f:
+        v1, v2 = line.strip().split("-")
+        graph[v1].append(v2)
+        graph[v2].append(v1)
+        
+def dfs(graph, path_so_far):
+    *_, last_visited = path_so_far
+    if last_visited == "end":
+        return 1
+
+    return sum(
+        dfs(graph, path_so_far + [neighbour])
+        for neighbour in graph[last_visited]
+        if not (neighbour.islower() and neighbour in path_so_far)
+    )
+
+dfs(graph, ["start"])

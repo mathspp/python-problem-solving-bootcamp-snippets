@@ -1,0 +1,8 @@
+from collections import defaultdict
+
+# Count the most and least common letters.
+counts = defaultdict(int)
+for char in polymer:
+    counts[char] += 1
+
+print(max(counts.values()) - min(counts.values()))

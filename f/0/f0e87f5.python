@@ -1,0 +1,25 @@
+from collections import Counter, defaultdict  # <--
+
+graph = defaultdict(list)
+with open(INPUT_FILE, "r") as f:
+    for line in f:
+        v1, v2 = line.strip().split("-")
+        graph[v1].append(v2)
+        graph[v2].append(v1)
+
+def has_repeated_cave(path):
+    caves = Counter([cave for cave in path if cave.islower()])
+    return max(caves.values()) > 1
+        
+def dfs(graph, path):
+    *_, last_visited = path
+    if last_visited == "end":
+        return 1
+
+    return sum(
+        dfs(graph, path + [neighb])
+        for neighb in graph[last_visited]
+        if neighb != "start" and (neighb.isupper() or neighb not in path or not has_repeated_cave(path))
+    )
+
+dfs(graph, ["start"])

@@ -1,0 +1,34 @@
+class Point:
+    def __init__(self, x, y, z):
+        self.x, self.y, self.z = x, y, z
+
+    def __add__(self, other):
+        """Implements self + other, if other is a Point."""
+        return Point(self.x + other.x, self.y + other.y, self.z + other.z)
+
+    def __sub__(self, other):
+        """Implements self - other, if other is a Point."""
+        return Point(self.x - other.x, self.y - other.y, self.z - other.z)
+
+    def __repr__(self):
+        """Returns the string representation of self."""
+        return f"Point({self.x}, {self.y}, {self.z})"
+
+    def __eq__(self, other):
+        """Check if the two points are equal."""
+        return (self.x, self.y, self.z) == (other.x, other.y, other.z)
+
+    def rotate(self, rot):
+        coords = [None, self.x, self.y, self.z]
+        return Point(*[sign(c) * coords[abs(c)] for c in rot])
+
+
+def build_list_of_differences(points):
+    return [[p2 - p1 for p2 in points] for p1 in points]
+
+
+build_list_of_differences([
+    Point(1, 0, 0),
+    Point(0, 1, 0),
+    Point(0, 0, 1),
+])

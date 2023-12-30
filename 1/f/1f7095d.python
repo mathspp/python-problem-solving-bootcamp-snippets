@@ -1,0 +1,30 @@
+with open(INPUT_FILE, "r") as f:
+    data = f.read()
+
+# Split point data from fold data.
+point_data, fold_data = data.split("\n\n")
+points = [tuple(map(int, point.split(","))) for point in point_data.splitlines()]
+folds = fold_data.splitlines()
+
+# Get rid of the beginning of the first fold line.
+fold = folds[0][11:]
+coord, value = fold.split("=")
+value = int(value)
+folded = []
+for x, y in points:
+    if coord == "x":
+        yf = y
+        if x < value:
+            xf = x
+        else:
+            xf = value - (x - value)
+    elif coord == "y":
+        xf = x
+        if y < value:
+            yf = y
+        else:
+            yf = value - (y - value)
+    if (xf, yf) not in folded:
+        folded.append((xf, yf))
+
+print(len(folded))

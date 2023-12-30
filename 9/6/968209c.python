@@ -1,0 +1,13 @@
+SEGMENTS = [
+    set("abcefg"),
+    set("cf"),
+    set("acdeg"),
+    set("acdfg"),
+    set("bcdf"),
+    set("abdfg"),
+    set("abdefg"),
+    set("acf"),
+    set("abcdefg"),
+    set("abcdfg"),
+]
+SEGMENTS

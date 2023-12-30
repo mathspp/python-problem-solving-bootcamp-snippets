@@ -1,0 +1,5 @@
+min_cost = min(
+    sum(abs(pos - crab) for crab in crabs)
+    for pos in range(min(crabs), max(crabs) + 1)
+)
+print(min_cost)

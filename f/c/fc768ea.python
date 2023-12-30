@@ -1,0 +1,27 @@
+def state_update(state, instruction):
+    horiz_pos, depth, aim = state
+    command, value = instruction
+
+    if command == "forward":
+        horiz_pos += value
+        depth += aim * value
+    elif command == "up":
+        aim -= value
+    elif command == "down":
+        aim += value
+    else:
+        raise ValueError("Unknown command.")
+    
+    return (horiz_pos, depth, aim)
+
+
+with open(INPUT_FILE, "r") as f:
+    instructions = [
+        (command, int(value)) for command, value in map(str.split, f)
+    ]
+
+state = (0, 0, 0)  # Horizontal position, depth, aim
+for instruction in instructions:
+    state = state_update(state, instruction)
+
+print(state[0] * state[1])

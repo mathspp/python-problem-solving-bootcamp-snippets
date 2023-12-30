@@ -1,0 +1,91 @@
+from functools import reduce
+
+def explode(snailfish_num, depth=0):
+    """Tries to explode the snailfish number given.
+
+    Returns 4 values:
+     - the snailfish number result;
+     - a Boolean indicating whether there was an explosion;
+     - if there was an explosion, the number to add on the left; and
+     - if there was an explosion, the number to add on the right.
+    """
+
+    if type(snailfish_num) == int:
+        return snailfish_num, False, None, None
+
+    left, right = snailfish_num
+    # If we are deep enough, explode right now.
+    if depth >= 4:
+        return 0, True, left, right
+
+    # Explode recursively, first on the left.
+    left, exploded, add_l, add_r = explode(left, depth + 1)
+    # If there was an explosion, don't explode on the right;
+    # we only do one explosion at a time.
+    if exploded:
+        if add_r is not None:
+            right = add_left(right, add_r)
+        return [left, right], True, add_l, None
+
+    right, exploded, add_l, add_r = explode(right, depth + 1)
+    if exploded:
+        if add_l is not None:
+            left = add_right(left, add_l)
+        return [left, right], True, None, add_r
+
+    # If we got to this point, nothing exciting happened.
+    return [left, right], False, None, None
+
+def split(snailfish_num):
+    """Tries to split a snailfish number.
+
+    Returns 2 values, the resulting snailfish number and a Boolean
+    flag indicating whether or not any splitting happened."""
+
+    if type(snailfish_num) == int:
+        if snailfish_num >= 10:
+            n, r = snailfish_num, snailfish_num % 2
+            return [int((n - r) / 2), int((n - r) / 2 + r)], True
+        else:
+            return snailfish_num, False
+
+    left, right = snailfish_num
+    left, split_happened = split(left)
+    # If the left side was split, don't try splitting the right side.
+    if split_happened:
+        return [left, right], split_happened
+
+    right, split_happened = split(right)
+    return [left, right], split_happened
+
+def snailfish_reduction(snailfish_num):
+    splitted = True
+    while splitted:
+        exploded = True
+        while exploded:
+            snailfish_num, exploded, _, _ = explode(snailfish_num)
+        snailfish_num, splitted = split(snailfish_num)
+    return snailfish_num
+
+def addition(left, right):
+    return snailfish_reduction([left, right])
+
+def snailfish_sum(snailfish_numbers):
+    return reduce(addition,  snailfish_numbers)
+
+def magnitude(snailfish_num):
+    """Returns the magnitude of a snailfish number."""
+
+    if type(snailfish_num) == int:
+        return snailfish_num
+
+    left, right = snailfish_num
+    return 3 * magnitude(left) + 2 * magnitude(right)
+
+def parse_snailfish(string):
+    return eval(string)
+
+with open(INPUT_FILE, "r") as f:
+    snailfish_numbers = [parse_snailfish(line.strip()) for line in f]
+
+print(magnitude(snailfish_sum(snailfish_numbers)))

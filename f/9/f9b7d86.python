@@ -1,0 +1,19 @@
+POINT_MATCH_THRESHOLD = 12
+
+def scanners_match(ref_scanner, other_scanner):
+    """Check if two scanners match and try to transform the 2nd into the 1st."""
+
+    ref_diffs = build_list_of_differences(ref_scanner)
+    for rotated in all_rotations(other_scanner):
+        rotated_diffs = build_list_of_differences(rotated)
+        matched, ref_idx, other_idx = points_of_view_match(
+            ref_diffs,
+            rotated_diffs,
+            POINT_MATCH_THRESHOLD,
+        )
+        if not matched:
+            continue  # Try another rotation if no match was found.
+        # Here, ref_scanner[ref_idx] and rotated[other_idx] match!
+        vec = ref_scanner[ref_idx] - rotated[other_idx]  # Translation vector.
+        return True, ref_scanner, [oth + vec for oth in other_scanner]
+    return False, ref_scanner, other_scanner

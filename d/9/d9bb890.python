@@ -1,0 +1,4 @@
+for _ in range(10):
+    break
+else:
+    print("Done with no breaks.")

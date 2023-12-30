@@ -1,0 +1,16 @@
+def magnitude(snail):
+    def combine(stack):
+        stack.append(2 * stack.pop() + 3 * stack.pop())
+
+    values, depths = snail
+    prev_depth, sub_magnitudes = 0, []
+    for val, dep in zip(values, depths):
+        sub_magnitudes.append(val)
+        if dep < prev_depth:  # If the depth decreased, it corresponds to closing `"]"`.
+            for _ in range(prev_depth - dep):
+                combine(sub_magnitudes)
+        prev_depth = dep
+    sub_magnitudes.append(values[-1])
+    for _ in range(prev_depth):
+        combine(sub_magnitudes)
+    return sub_magnitudes[0]

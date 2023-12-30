@@ -1,0 +1,4 @@
+def divmod(n, m):
+    return n // m, n % m
+
+divmod(17, 5)

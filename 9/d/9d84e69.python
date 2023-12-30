@@ -1,0 +1,34 @@
+from collections import Counter
+from itertools import chain
+from math import prod
+
+next_id = 0
+with open(INPUT_FILE, "r") as f:
+    grid = [
+        [(next_id := next_id + 1) if num != "9" else 0 for num in line.strip()]
+        for line in f
+    ]
+
+def neighbouring_positions(matrix, r, c):
+    return {
+        (r_, c_) for r_, c_ in [(r - 1, c), (r, c - 1), (r + 1, c), (r, c + 1)]
+        if 0 <= r_ < len(matrix) and 0 <= c_ < len(matrix[0])
+    }
+
+grid, new_grid = [], grid
+while grid != new_grid:
+    grid = new_grid
+    new_grid = []
+    for r in range(len(grid)):
+        new_row = []
+        for c in range(len(grid[0])):
+            if grid[r][c] == 0:
+                new_row.append(0)
+                continue
+            M = max(grid[r_][c_] for r_, c_ in neighbouring_positions(grid, r, c))
+            new_row.append(max(grid[r][c], M))
+        new_grid.append(new_row)
+
+counter = Counter(chain.from_iterable(grid))
+counter[0] = 0  # Remove counts from the basin walls (9s that were turned into 0s).
+print(prod(sorted(counter.values())[-3:]))

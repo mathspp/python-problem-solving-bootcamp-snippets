@@ -1,0 +1,3 @@
+with open(INPUT_FILE, "r") as f:
+    graph_edges = [line.strip().split("-") for line in f.readlines()]
+graph_edges

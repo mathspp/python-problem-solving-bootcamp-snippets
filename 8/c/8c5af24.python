@@ -1,0 +1,7 @@
+def sum_versions(packet):
+    """Sum the versions of the given packet and all (deeply) nested sub-packets."""
+
+    if len(packet) == 2:
+        return packet[0]
+    elif len(packet) == 3:
+        return packet[0] + sum(sum_versions(sub) for sub in packet[2])

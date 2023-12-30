@@ -1,0 +1,4 @@
+def parse_snailfish(string):
+    return eval(string)
+
+parse_snailfish("[1, 2]") == [1, 2]

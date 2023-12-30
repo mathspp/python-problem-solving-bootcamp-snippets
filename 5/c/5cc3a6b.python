@@ -1,0 +1,26 @@
+from collections import defaultdict
+from contextlib import suppress
+
+graph = defaultdict(list)
+with open(INPUT_FILE, "r") as f:
+    for line in f:
+        v1, v2 = line.strip().split("-")
+        graph[v1].append(v2)
+        graph[v2].append(v1)
+
+for connections in graph.values():
+    with suppress(ValueError):
+        connections.remove("start")
+        
+def dfs(graph, path, has_repeated):
+    *_, last_visited = path
+    if last_visited == "end":
+        return 1
+
+    return sum(
+        dfs(graph, path + [neighb], has_repeated or (neighb.islower() and neighb in path))
+        for neighb in graph[last_visited]
+        if neighb.isupper() or neighb not in path or not has_repeated
+    )
+
+dfs(graph, ["start"], False)

@@ -1,0 +1,20 @@
+def add_left(snailfish_num, number):
+    """Add `number` to the leftmost number in the snailfish number."""
+
+    if type(snailfish_num) == int:
+        return snailfish_num + number
+    left, right = snailfish_num
+    return [add_left(left, number), right]
+
+def add_right(snailfish_num, number):
+    """Add `number` to the rightmost number in the snailfish number."""
+
+    if type(snailfish_num) == int:
+        return snailfish_num + number
+    left, right = snailfish_num
+    return [left, add_right(right, number)]
+
+assert add_left([6, [5, [4, [3, 2]]]], 3) == [9, [5, [4, [3, 2]]]]
+assert add_right([6, [5, [4, [3, 2]]]], 3) == [6, [5, [4, [3, 5]]]]
+assert add_left([[1, 2], [[3, 4], 5]], 10) == [[11, 2], [[3, 4], 5]]
+assert add_right([[1, 2], [[3, 4], 5]], 10) == [[1, 2], [[3, 4], 15]]

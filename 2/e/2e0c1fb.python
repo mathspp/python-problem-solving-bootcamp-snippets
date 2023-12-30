@@ -1,0 +1,14 @@
+def all_orderings(letters):
+    def aux(length):
+        if not length:
+            return [""]
+
+        orderings = aux(length - 1)
+        return [ordering + char for ordering in orderings for char in letters]
+    
+    orderings = aux(7)
+    letters = set(letters)
+    return [ordering for ordering in orderings if letters == set(ordering)]
+
+orderings = all_orderings("abcdefg")
+print(orderings[:7])

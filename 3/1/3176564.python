@@ -1,0 +1,4 @@
+from collections import Counter
+from itertools import chain
+counts = Counter(chain.from_iterable(SEGMENTS))
+counts

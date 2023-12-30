@@ -1,0 +1,10 @@
+LENGTHS = {2, 3, 4, 7}
+
+with open(INPUT_FILE, "r") as f:
+    lines = f.readlines()
+
+acc = 0
+for line in lines:
+    for digit_signals in line.split(" | ")[1].split():
+        acc += len(digit_signals) in LENGTHS
+print(acc)

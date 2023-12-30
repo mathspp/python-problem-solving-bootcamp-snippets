@@ -1,0 +1,15 @@
+scores = 0
+for line in lines:
+    stack = LifoQueue()
+    is_valid, error_char = True, None  # Additionally, keep track of the faulty char.
+    for char in line:
+        if char in OPENING:
+            stack.put(char)
+        elif char in CLOSING:
+            op = stack.get()
+            if char != CLOSE_WITH[op]:
+                is_valid, error_char = False, char  # Assign to the faulty char.
+                break
+    if not is_valid:
+        scores += SYNTAX_SCORES[error_char]  # Use it to get the error score.
+print(scores)

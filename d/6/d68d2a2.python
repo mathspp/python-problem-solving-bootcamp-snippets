@@ -1,0 +1,20 @@
+from collections import Counter, defaultdict
+
+counters = defaultdict(Counter)
+with open(INPUT_FILE, "r") as f:
+    for line in f:
+        line = line.strip()
+        for col, bit in enumerate(line):
+            counters[col][bit] += 1
+
+gamma, epsilon = "", ""
+for col in range(len(line)):
+    bit, _ = counters[col].most_common(1)[0]
+    if bit == "0":
+        gamma += "0"
+        epsilon += "1"
+    else:
+        gamma += "1"
+        epsilon += "0"
+
+print(int(gamma, 2) * int(epsilon, 2))

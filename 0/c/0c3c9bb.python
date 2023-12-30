@@ -1,0 +1,23 @@
+def _parse_snailfish(string):
+    """Parse a snailfish number which is assumed to only have 1-digit numbers."""
+
+    if string[0] in "0123456789":
+        return int(string[0]), string[1:]
+
+    # If this wasn't a digit, then it should have the following structure:
+    # [ snailfish_number , snailfish_number ]
+    assert string[0] == "["
+    left, string = _parse_snailfish(string[1:])
+    assert string[0] == ","
+    right, string = _parse_snailfish(string[1:])
+    assert string[0] == "]"
+
+    return [left, right], string[1:]
+
+def parse_snailfish(string):
+    return _parse_snailfish(string)[0]
+
+assert (
+    parse_snailfish("[[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]") ==
+    [[[[8, 7], [7, 7]], [[8, 6], [7, 7]]], [[[0, 7], [6, 6]], [8, 7]]]
+)

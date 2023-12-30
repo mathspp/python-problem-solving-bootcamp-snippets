@@ -1,0 +1,12 @@
+def all_orderings(letters):
+    if not letters:
+        return [""]
+
+    return [
+        letter + ordering for idx, letter in enumerate(letters)
+        for ordering in all_orderings(letters[:idx] + letters[idx + 1:])
+    ]
+
+orderings = all_orderings("abcdefg")
+print(orderings[:7])
+print(len(orderings))

@@ -1,0 +1,8 @@
+from queue import LifoQueue
+
+stack = LifoQueue
+stack.put(1)
+stack.put(2)
+stack.put(3)
+for item in stack:
+    print(item)

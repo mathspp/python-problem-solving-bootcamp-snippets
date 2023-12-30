@@ -1,0 +1,8 @@
+from functools import reduce
+from operator import add
+
+min_cost = float("+inf")
+for pos in range(min(crabs), max(crabs) + 1):
+    fuel_cost = reduce(add, [abs(pos - crab) for crab in crabs], 0)
+    min_cost = min(min_cost, fuel_cost)
+print(min_cost)

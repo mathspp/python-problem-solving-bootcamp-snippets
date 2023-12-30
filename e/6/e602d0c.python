@@ -1,0 +1,13 @@
+def filter_by_count(tree_counter, predicate):
+    prefix = ""
+    while isinstance(tree_counter, dict):
+        zeroes, ones = add_up(tree_counter["0"]), add_up(tree_counter["1"])
+        pick = "0" if predicate(zeroes, ones) else "1"
+        prefix += pick
+        tree_counter = tree_counter[pick]
+    return prefix
+    
+oxygen_rating = filter_by_count(tree_counter, operator.gt)
+co2_rating = filter_by_count(tree_counter, operator.le)
+
+print(int(oxygen_rating, 2) * int(co2_rating, 2))

@@ -1,0 +1,9 @@
+R, C = len(grid), len(grid[0])
+
+full_map = [[None for _ in range(5 * C)] for _ in range(5 * R)]
+for r, row in enumerate(grid):
+    for c, value in enumerate(row):
+        for mr in range(5):
+            for mc in range(5):
+                new_value = ((value + mr + mc - 1) % 9) + 1
+                full_map[r + mr * R][c + mc * C] = new_value

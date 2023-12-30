@@ -1,0 +1,6 @@
+results = set()
+for a in range(1, 4):
+    for b in range(1, 4):
+        for c in range(1, 4):
+            results.add(a + b + c)
+print(results)

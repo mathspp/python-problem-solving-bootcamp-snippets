@@ -1,0 +1,5 @@
+def parse_board_flat(board_string):
+    return [int(num) for num in board_string.split()]
+
+flat_example = parse_board_flat(board_data[0])
+print(flat_example)

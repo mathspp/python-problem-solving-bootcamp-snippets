@@ -1,0 +1,4 @@
+acc = 0
+for line in lines:
+    acc += sum(len(signals) in LENGTHS for signals in line.split(" | ")[1].split())
+print(acc)

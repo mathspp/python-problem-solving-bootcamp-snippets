@@ -1,0 +1,18 @@
+def magnitude(snailfish_num):
+    """Returns the magnitude of a snailfish number."""
+
+    if isinstance(snailfish_num, int):
+        return snailfish_num
+
+    left, right = snailfish_num
+    return 3 * magnitude(left) + 2 * magnitude(right)
+
+assert magnitude([[1, 2], [[3, 4], 5]]) == 143
+assert magnitude([[[[0, 7], 4], [[7, 8], [6, 0]]], [8, 1]]) == 1384
+assert magnitude([[[[1, 1], [2, 2]], [3, 3]], [4, 4]]) == 445
+assert magnitude([[[[3, 0], [5, 3]], [4, 4]], [5, 5]]) == 791
+assert magnitude([[[[5, 0], [7, 4]], [5, 5]], [6, 6]]) == 1137
+assert (
+    magnitude([[[[8, 7], [7, 7]], [[8, 6], [7, 7]]], [[[0, 7], [6, 6]], [8, 7]]]) ==
+    3488
+)

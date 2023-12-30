@@ -1,0 +1,28 @@
+def bingo_simulation_last(nums_drawn, boards, statuses):
+    board_size = int(len(boards[0]) ** 0.5)
+    data = list(zip(boards, statuses))
+
+    while len(data) > 1:
+        num_drawn, *nums_drawn = nums_drawn
+        
+        # Update all boards, ...
+        for board, status in data:
+            update_status(board, status, num_drawn)
+        # ... then keep those that don't have a bingo.
+        data = [
+            (board, status) for board, status in data
+            if not flat_board_has_bingo(status, board_size)
+        ]
+
+    board, status = data[0]
+    while not flat_board_has_bingo(status, board_size):
+        num_drawn, *nums_drawn = nums_drawn
+        update_status(board, status, num_drawn)
+    
+    return num_drawn, board, status
+
+score_board_by_list_of_coordinates(*bingo_simulation_last(
+    numbers,
+    boards,
+    [[] for _ in boards],
+))

@@ -1,0 +1,3 @@
+mapping = {frozenset(hint): scores.index(score) for hint, score in zip(hints, these_scores)}
+values = "cdfeb fcadb cdfeb cdbaf".split()
+[mapping[frozenset(value)] for value in values]

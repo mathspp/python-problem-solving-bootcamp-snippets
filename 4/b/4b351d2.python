@@ -1,0 +1,19 @@
+with open(INPUT_FILE, "r") as f:
+    instructions = f.readlines()
+
+horiz_pos, depth = 0, 0
+for line in instructions:
+    command, value = line.split()
+    value = int(value)
+    
+    match command:
+        case "forward":
+            horiz_pos += value
+        case "up":
+            depth -= value
+        case "down":
+            depth += value
+        case _:
+            raise ValueError("Unknown command.")
+
+print(horiz_pos * depth)

@@ -1,0 +1,19 @@
+class Point:
+    def __init__(self, x, y, z):
+        self.x, self.y, self.z = x, y, z
+
+    def __eq__(self, other):
+        """Check if the two points are equal."""
+        return (self.x, self.y, self.z) == (other.x, other.y, other.z)
+
+    def rotate(self, rot):
+        coords = [None, self.x, self.y, self.z]
+        return Point(*[sign(c) * coords[abs(c)] for c in rot])
+
+A = Point(3, 2, 0)
+assert Point(-3, -2, 0).rotate([-1, -2, 3]) == A
+assert Point(3, 0, -2).rotate([1, -3, 2]) == A
+
+B = Point(0, 0, 2)
+assert Point(0, 0, 2).rotate([-1, -2, 3]) == B
+assert Point(0, 2, 0).rotate([1, -3, 2]) == B

@@ -1,0 +1,3 @@
+def play(positions, scores, player):
+    """Computes in how many universes each player wins this game."""
+    ...

@@ -1,0 +1,8 @@
+def update_status(board, status, number):
+    board_size = len(board[0])
+    for idx, row in enumerate(board):
+        try:
+            pos = row.index(number)  # Is the number in this row?
+            status[pos] |= 1 << (board_size - pos - 1)
+        except ValueError:
+            pass  # If `number` isn't in `row`, just skip this row.

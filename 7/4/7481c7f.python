@@ -1,0 +1,7 @@
+with open(INPUT_FILE, "r") as f:
+    crabs = [int(num) for num in f.readline().split(",")]
+
+costs = [
+    sum(abs(pos - crab) for crab in crabs)
+    for pos in range(min(crabs), max(crabs) + 1)
+]

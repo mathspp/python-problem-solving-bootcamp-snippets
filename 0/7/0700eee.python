@@ -1,0 +1,32 @@
+from collections import Counter
+from functools import cache
+from itertools import product
+from time import time
+
+counts = Counter(sum(rolls) for rolls in product(range(1, 4), repeat=3))
+
+@cache
+def play(positions, scores, player):
+    if max(scores) >= 21:
+        return [int(score >= 21) for score in scores]
+
+    outcomes = [0] * len(positions)
+    for roll, count in counts.items():
+        positions_, scores_ = list(positions), list(scores)
+        positions_[player] = (positions_[player] - 1 + roll) % 10 + 1
+        scores_[player] += positions_[player]
+        # Recursive call.
+        wins = play(tuple(positions_), tuple(scores_), (player + 1) % len(positions))
+        # Accumulate results.
+        for idx, win in zip(range(len(outcomes)), wins):
+            outcomes[idx] += count * win
+
+    return outcomes
+
+with open(INPUT_FILE, "r") as f:
+    positions = tuple([int(line.strip().split()[-1]) for line in f])
+
+start = time()
+wins = play(positions, (0,) * len(positions), 0)
+print(f"Max in {wins} is {max(wins)}.")
+print(f"Finished in {time() - start:.3f} seconds.")

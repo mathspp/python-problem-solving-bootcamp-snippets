@@ -1,0 +1,18 @@
+increased = pos = current_sum = previous_sum = 0
+
+num_list = []
+
+with open("input.txt", "r") as f:
+    for line in f:
+        num_list.append(int(line))
+
+for number in num_list:
+    pos = pos + 1
+    if (len(num_list) - pos) >= 2:
+        current_list = num_list[num_list.index(number):num_list.index(number)+3]
+        current_sum = sum(current_list)
+        if current_sum > previous_sum and pos > 1:
+            increased = increased + 1
+        previous_sum = current_sum
+
+print(increased)

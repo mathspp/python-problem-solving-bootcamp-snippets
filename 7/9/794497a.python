@@ -1,0 +1,28 @@
+def find_basin(matrix, r, c):
+    to_visit, seen, basin = [(r, c)], {(r, c)}, []
+    while to_visit:
+        r_, c_ = to_visit.pop()
+        if matrix[r_][c_] == 9:
+            continue
+        basin.append((r_, c_))
+        neighbs = neighbouring_positions(matrix, r_, c_)
+        to_visit.extend(neighbs - seen)
+        seen.update(neighbs)
+    return basin
+
+low_points = []
+for r, row in enumerate(grid):
+    for c, val in enumerate(row):
+        values = [grid[r][c] for r, c in neighbouring_positions(grid, r, c)]
+        if min(values) > val:
+            low_points.append((r, c))
+
+lengths = []
+for r, c in low_points:
+    basin = find_basin(grid, r, c)
+    lengths.append(len(basin))
+
+prod = 1
+for n in sorted(lengths)[-3:]:
+    prod *= n
+print(prod)

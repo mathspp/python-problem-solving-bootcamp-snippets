@@ -1,0 +1,19 @@
+from collections import Counter
+
+counts = Counter()
+with open(INPUT_FILE, "r") as f:
+    for line in f:
+        counts += Counter(enumerate(line.strip()))
+print(counts)
+
+gamma, epsilon = "", ""
+for col in range(len(counts) // 2):
+    zeroes, ones = counts[(col, "0")], counts[(col, "1")]
+    if zeroes > ones:
+        gamma += "0"
+        epsilon += "1"
+    else:
+        gamma += "1"
+        epsilon += "0"
+
+print(int(gamma, 2) * int(epsilon, 2))

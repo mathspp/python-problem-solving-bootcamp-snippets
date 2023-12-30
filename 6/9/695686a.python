@@ -1,0 +1,21 @@
+with open(INPUT_FILE, "r") as f:
+    instructions = f.readlines()
+
+instructions.append("reset")  # Add a "reset" command at the end.
+
+horiz_pos, depth = 0, 0
+for line in instructions:
+    
+    match line.split():
+        case ["reset"]:
+            horiz_pos, depth = 0, 0
+        case ["forward", value]:
+            horiz_pos += int(value)
+        case ["up", value]:
+            depth -= int(value)
+        case ["down", value]:
+            depth += int(value)
+        case _:
+            raise ValueError("Unknown command.")
+
+print(horiz_pos * depth)  # Prints 0 because the last command was "reset".

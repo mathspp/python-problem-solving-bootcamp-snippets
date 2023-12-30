@@ -1,0 +1,7 @@
+# List of pairs:
+with open(INPUT_FILE, "r") as f:
+    polymer = f.readline().strip()
+    f.readline()  # Read the empty line.
+    rules = [line.strip().split(" -> ") for line in f]
+
+print(rules[:8])

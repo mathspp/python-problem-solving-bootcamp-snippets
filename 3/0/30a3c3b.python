@@ -1,0 +1,12 @@
+with open(INPUT_FILE, "r") as f:
+    depths = [int(line) for line in f]
+
+count = 0
+sum_prev = float("+inf")
+for triple in triplewise(depths):
+    sum_ = sum(triple)
+    if sum_prev < sum_:
+        count += 1
+    sum_prev = sum_
+
+print(count)

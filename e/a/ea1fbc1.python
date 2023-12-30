@@ -1,0 +1,22 @@
+from collections import Counter
+
+counters = []
+with open(INPUT_FILE, "r") as f:
+    for line in f:
+        line = line.strip()
+        if not counters:
+            counters = [Counter() for _ in range(len(line))]
+        for counter, bit in zip(counters, line):
+            counter[bit] += 1
+
+gamma, epsilon = "", ""
+for counts in counters:
+    bit, _ = counts.most_common(1)[0]
+    if bit == "0":
+        gamma += "0"
+        epsilon += "1"
+    else:
+        gamma += "1"
+        epsilon += "0"
+
+print(int(gamma, 2) * int(epsilon, 2))

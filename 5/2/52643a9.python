@@ -1,0 +1,5 @@
+from math import ceil, floor
+
+def spl(n):
+    return [floor(n / 2), ceil(n / 2)]
+assert spl(11) == [5, 6]

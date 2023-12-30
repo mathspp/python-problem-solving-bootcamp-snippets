@@ -1,0 +1,81 @@
+from itertools import chain
+
+_Ellipsis = type(...)  # We need this for pattern matching in `__getitem__`.
+
+class Grid:
+    def __init__(self, width, height, fill=None, factory=None):
+        self.width = width
+        self.height = height
+        if factory is not None:
+            self._grid = [[factory(x, y) for x in range(width)] for y in range(height)]
+        else:
+            self._grid = [[fill for _ in range(width)] for _ in range(height)]
+
+    @classmethod
+    def from_rows(cls, rows_iterable):
+        """Build a grid from an iterable of rows."""
+        rows_iterable = iter(rows_iterable)
+        # Get the first row to determine the width of the grid.
+        seed_row = next(rows_iterable)
+        width = len(seed_row)
+        grid = cls(width, 0)
+
+        # Add the seed row to the grid.
+        grid._grid.append(list(seed_row))
+        grid.height += 1
+
+        for row in rows_iterable:
+            if len(row) != width:
+                raise ValueError(f"All rows must have the same length {width!r}")
+            grid._grid.append(list(row))
+            grid.height += 1
+
+        return grid
+
+
+    def __repr__(self):
+        cell_width = max(len(str(elem)) for elem in chain.from_iterable(self._grid))
+        return "\n".join(
+            ", ".join(f"{elem!r:>{cell_width}}" for elem in row)
+            for row in self._grid
+        )
+
+    def __getitem__(self, index):
+        match index:
+            case (int(x), _Ellipsis()):
+                return [self._grid[row][x] for row in range(self.rows)]
+            case (_Ellipsis(), int(y)):
+                return self._grid[y][:]
+            case (int(x), int(y)):
+                return self._grid[y][x]
+            case _:
+                raise IndexError(f"Can't index grid with {index!r}")
+
+    def __setitem__(self, index, value):
+        match index:
+            case (int(x), _Ellipsis()):
+                for y in range(self.height):
+                    self._grid[y][x] = value
+            case (_Ellipsis(), int(y)):
+                for x in range(self.width):
+                    self._grid[y][x] = value
+            case (x, y):
+                self._grid[y][x] = value
+            case _:
+                raise IndexError(f"Can't set index {index!r}")
+
+    def adjacent_positions(self, x, y, *, diagonals=False):
+        """Return the neighbour positions of the given index.
+
+        Set `diagonals=True` to include diagonals.
+        """
+        base = [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
+        if diagonals:
+            base.extend(
+                [(x + 1, y + 1), (x + 1, y - 1), (x - 1, y + 1), (x - 1, y - 1)]
+            )
+        return [
+            (x, y)
+            for x, y in base
+            if 0 <= x < self.width and 0 <= y < self.height
+        ]

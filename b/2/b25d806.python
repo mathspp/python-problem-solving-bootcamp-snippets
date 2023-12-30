@@ -1,0 +1,5 @@
+# IMPORTANT: Set this to the correct path for you!
+INPUT_FILE = "input.txt"
+
+import pathlib
+assert pathlib.Path(INPUT_FILE).exists()

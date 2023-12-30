@@ -1,0 +1,16 @@
+def split(snail):
+    values, depths = snail
+    if all(val <= 9 for val in values):
+        return snail, False
+
+    for idx, val in enumerate(values):
+        if val > 9:
+            break
+
+    new_depth = 1 + max(
+        depths[idx - 1] if idx > 0 else 0,
+        depths[idx] if idx < len(depths) else 0,
+    )
+    values = values[:idx] + [floor(val / 2), ceil(val / 2)] + values[idx + 1:]
+    depths = depths[:idx] + [new_depth] + depths[idx:]
+    return (values, depths), True

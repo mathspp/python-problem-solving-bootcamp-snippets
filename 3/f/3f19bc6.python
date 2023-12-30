@@ -1,0 +1,14 @@
+class Point:
+    def __init__(self, x, y, z):
+        self.x, self.y, self.z = x, y, z
+
+    def __sub__(self, other):
+        """Implements self - other, if other is a Point."""
+        return Point(self.x - other.x, self.y - other.y, self.z - other.z)
+    # ...
+
+    def norm_sq(self):
+        """Returns the square of the norm of the point."""
+        return self.x ** 2 + self.y ** 2 + self.z ** 2
+
+print(Point(3, 4, 0).norm_sq())

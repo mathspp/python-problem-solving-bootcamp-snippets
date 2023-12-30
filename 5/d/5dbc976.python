@@ -1,0 +1,7 @@
+from enum import auto, StrEnum
+
+# We define an Enum(eration) with the valid commands.
+class Command(StrEnum):
+    FORWARD = auto()
+    UP = auto()
+    DOWN = auto()

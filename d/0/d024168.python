@@ -1,0 +1,17 @@
+from itertools import product
+
+
+def manhattan(p1, p2):
+    return abs(p1.x - p2.x) + abs(p1.y - p2.y) + abs(p1.z - p2.z)
+
+
+# Transform all scanners into 0's frame of reference.
+frame_of_reference = {other: other for other in done}
+positions = {other: Point(0, 0, 0) for other in done}
+for other in reversed(done):
+    while frame_of_reference[other] != 0:
+        rot, vec = transformations[frame_of_reference[other]]
+        positions[other] = positions[other].rotate(rot) + vec
+        frame_of_reference[other] = connects_to[frame_of_reference[other]]
+
+print(max(manhattan(p1, p2) for p1, p2 in product(positions.values(), repeat=2)))

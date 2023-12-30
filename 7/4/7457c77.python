@@ -1,0 +1,25 @@
+from collections import defaultdict
+
+def new_tree_dict():
+    return defaultdict(new_tree_dict)    # <- Recursive defaultdict structure;
+                                         # this builds the dictionary as needed.
+
+def add_count(tree_dict, string):
+    if len(string) == 1:
+        # Ensure we can increment the count by setting the default value to 0.
+        tree_dict.setdefault(string, 0)
+        tree_dict[string] += 1
+    else:
+        add_count(tree_dict[string[0]], string[1:])
+
+def add_up(tree_dict):
+    if isinstance(tree_dict, dict):
+        return sum(add_up(sub_dict) for sub_dict in tree_dict.values())
+    else:
+        return tree_dict
+
+tree_counter = new_tree_dict()
+with open(INPUT_FILE, "r") as f:
+    # No longer need to peek at the first line of f.
+    for line in f:
+        add_count(tree_counter, line.strip())

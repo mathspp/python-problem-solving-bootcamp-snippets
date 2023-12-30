@@ -1,0 +1,10 @@
+from collections import defaultdict
+
+graph = defaultdict(list)
+with open(INPUT_FILE, "r") as f:
+    for line in f:
+        v1, v2 = line.strip().split("-")
+        graph[v1].append(v2)
+        graph[v2].append(v1)
+
+graph["start"]

@@ -1,0 +1,10 @@
+from functools import reduce
+from operator import and_
+
+def bit_rows_has_bingo(matrix):
+    # The number with the appropriate number of 1s in the binary expansion:
+    target = 2 ** len(matrix) - 1
+    return (
+        any(target == row for row in matrix) or
+        reduce(and_, matrix) > 0
+    )

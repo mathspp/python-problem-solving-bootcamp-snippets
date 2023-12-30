@@ -1,0 +1,17 @@
+from itertools import pairwise
+
+def magnitude(snail):
+    def combine(stack):
+        stack.append(2 * stack.pop() + 3 * stack.pop())
+
+    values, depths = snail
+    sub_magnitudes = []
+    for val, (prev_dep, dep) in zip(values, pairwise([0] + depths)):
+        sub_magnitudes.append(val)
+        for _ in range(prev_dep - dep):
+            combine(sub_magnitudes)
+        prev_dep = dep
+    sub_magnitudes.append(values[-1])
+    for _ in range(prev_dep):
+        combine(sub_magnitudes)
+    return sub_magnitudes[0]

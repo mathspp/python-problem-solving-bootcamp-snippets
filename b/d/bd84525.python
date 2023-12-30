@@ -1,0 +1,5 @@
+def total_fuel_cost(crabs, pos):
+    return sum(
+        how_many * fuel_cost(abs(pos - crab_pos))
+        for crab_pos, how_many in crabs.items()
+    )

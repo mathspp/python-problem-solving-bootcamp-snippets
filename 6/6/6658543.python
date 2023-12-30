@@ -1,0 +1,22 @@
+def bingo_simulation_by_board(nums_drawn, boards, statuses):
+    board_size = int(len(boards[0]) ** 0.5)
+
+    # Number of moves needed to finish each board:
+    finishing_moves = []
+    for board, status in zip(boards, statuses):
+        # Create a copy of the list of numbers to draw from:
+        draw_from, moves = nums_drawn[::], -1
+        # Play board to completion:
+        while not flat_board_has_bingo(status, board_size):
+            num, *draw_from = draw_from
+            update_status(board, status, num)
+            moves += 1
+        finishing_moves.append(moves)
+
+    return finishing_moves, boards, statuses
+            
+finishing_moves, boards, statuses = bingo_simulation_by_board(
+    numbers,
+    boards,
+    [[] for _ in boards],
+)

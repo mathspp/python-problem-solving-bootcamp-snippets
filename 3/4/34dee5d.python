@@ -1,0 +1,6 @@
+# How many characters to drop from the beginning of each fold string.
+FOLD_LINE_PREFIX_LENGTH = 11
+
+# Get rid of the beginning of the first fold line.
+fold = folds[0][FOLD_LINE_PREFIX_LENGTH:]
+print(fold)

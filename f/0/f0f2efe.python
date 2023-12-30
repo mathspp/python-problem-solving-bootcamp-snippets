@@ -1,0 +1,9 @@
+from time import perf_counter
+
+with open(INPUT_FILE, "r") as f:
+    hex_string = f.read().strip()
+
+start = perf_counter()
+bin_string = hex_to_bin(hex_string)
+end = perf_counter()
+print(f"Translated in {end - start:.8f} seconds.")

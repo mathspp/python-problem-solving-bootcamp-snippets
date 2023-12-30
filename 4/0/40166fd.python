@@ -1,0 +1,5 @@
+def all_rotations(points):
+    return [
+        [point.rotate(rot) for point in points]
+        for rot in ROTATIONS
+    ]

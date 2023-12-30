@@ -1,0 +1,5 @@
+from itertools import permutations
+
+orderings = list(permutations("abcdefg"))
+print(orderings[:3])
+print(len(orderings))

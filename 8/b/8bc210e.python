@@ -1,0 +1,4 @@
+hints = "acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab".split()
+these_counts = Counter(chain.from_iterable(hints))
+these_scores = [sum(these_counts[seg] for seg in hint) for hint in hints]
+these_scores

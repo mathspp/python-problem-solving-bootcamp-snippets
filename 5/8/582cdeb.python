@@ -1,0 +1,37 @@
+FOLD_LINE_PREFIX = "fold along "
+
+def fold_point(point, coord, value):
+    x, y = point
+    xf = min(x, 2 * value - x) if coord == "x" else x
+    yf = min(y, 2 * value - y) if coord == "y" else y
+    return (xf, yf)
+
+with open(INPUT_FILE, "r") as f:
+    data = f.read()
+
+# Split point data from fold data.
+point_data, fold_data = data.split("\n\n")
+points = [tuple(map(int, point.split(","))) for point in point_data.splitlines()]
+# Parse all folds now:
+folds = [
+    fold.removeprefix(FOLD_LINE_PREFIX).split("=")
+    for fold in fold_data.splitlines()
+]
+
+folded = set(points)
+for coord, value in folds:
+    int_value = int(value)
+    folded = {fold_point(point, coord, int_value) for point in folded}
+
+# Create a "canvas" to paint the final result on.
+width = 1 + max(x for x, _ in folded)
+height = 1 + max(y for _, y in folded)
+# We duplicate the width to "fix" the aspect ratio of what we'll print.
+canvas = [[" "] * 2 * width for _ in range(height)]
+for x, y in folded:
+    # Character u2588 is a nice full box, see
+    # https://en.wikipedia.org/wiki/Box-drawing_character#Block_Elements
+    canvas[y][2 * x] = "\u2588"
+    canvas[y][2 * x + 1] = "\u2588"
+for row in canvas:
+    print("".join(row))

@@ -1,0 +1,9 @@
+from itertools import product
+
+R, C = len(grid), len(grid[0])
+
+full_map = [[None for _ in range(5 * C)] for _ in range(5 * R)]
+for r, c in product(range(R), range(C)):
+    for mr, mc in product(range(5), repeat=2):
+        new_value = ((grid[r][c] + mr + mc - 1) % 9) + 1
+        full_map[r + mr * R][c + mc * C] = new_value

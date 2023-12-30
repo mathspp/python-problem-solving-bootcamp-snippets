@@ -1,0 +1,8 @@
+def init_tree_dict(levels):
+    if not levels:
+        return 0
+
+    return {
+        "0": init_tree_dict(levels - 1),
+        "1": init_tree_dict(levels - 1),
+    }

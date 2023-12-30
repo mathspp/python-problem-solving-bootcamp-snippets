@@ -1,0 +1,33 @@
+from functools import reduce
+from itertools import permutations
+
+BASE = "abcdefg"
+SEGMENTS = [
+    set("abcefg"),
+    set("cf"),
+    set("acdeg"),
+    set("acdfg"),
+    set("bcdf"),
+    set("abdfg"),
+    set("abdefg"),
+    set("acf"),
+    set("abcdefg"),
+    set("abcdfg"),
+]
+ALL_ORDERINGS = [str.maketrans("".join(perm), BASE) for perm in permutations(BASE)]
+
+def from_base(digits, base=10):
+    return reduce(lambda l, r: l * base + r, digits, 0)
+
+with open(INPUT_FILE, "r") as f:
+    lines = f.readlines()
+
+acc = 0
+for line in lines:
+    hints, values = map(str.split, line.split(" | "))
+    for ordering in ALL_ORDERINGS:
+        if all(set(hint.translate(ordering)) in SEGMENTS for hint in hints):
+            digit_ints = [SEGMENTS.index(set(value.translate(ordering))) for value in values]
+            acc += from_base(digit_ints, 10)
+            break
+print(acc)

@@ -1,0 +1,17 @@
+from functools import cache
+from time import time
+
+# @cache
+def fuel_cost(distance):
+    return distance * (distance + 1) // 2
+
+with open(INPUT_FILE, "r") as f:
+    crabs = [int(num) for num in f.readline().split(",")]
+    
+start = time()
+print(min(
+    sum(fuel_cost(abs(pos - crab)) for crab in crabs)
+    for pos in range(min(crabs), max(crabs) + 1)
+))
+end = time()
+print(f"Time taken: {end - start}.")

@@ -1,0 +1,5 @@
+with open(INPUT_FILE, "r") as f:
+    polymer, rule_data = f.read().split("\n\n")
+
+rules = [line.strip().split(" -> ") for line in rule_data.splitlines()]
+print(rules[:8])

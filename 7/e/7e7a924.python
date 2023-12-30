@@ -1,0 +1,19 @@
+from collections import Counter
+
+# A dictionary mapping pairs to new characters:
+with open(INPUT_FILE, "r") as f:
+    polymer = f.readline().strip()
+    f.readline()  # Read the empty line.
+    rules = dict(line.strip().split(" -> ") for line in f)
+
+# Pair substition into the template polymer.
+for _ in range(10):
+    for rule, new_char in rules.items():
+        replace_with = rule[0] + "|" + new_char + "|" + rule[1]
+        while polymer != (polymer := polymer.replace(rule, replace_with)):
+            pass
+    polymer = polymer.replace("|", "")
+
+# Count the most and least common letters.
+counts = Counter(polymer)
+print(max(counts.values()) - min(counts.values()))

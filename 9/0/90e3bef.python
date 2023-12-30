@@ -1,0 +1,11 @@
+def magnitude(snailfish_num):
+    if len(snailfish_num) == 1:
+        return snailfish_num[0]
+
+    depth = 0
+    for idx, token in enumerate(snailfish_num):
+        depth += (token == "[") - (token == "]")
+        if depth == 1 and token == ",":
+            left = magnitude(snailfish_num[1: idx])
+            right = magnitude(snailfish_num[idx + 1:-1])
+            return 3 * left + 2 * right

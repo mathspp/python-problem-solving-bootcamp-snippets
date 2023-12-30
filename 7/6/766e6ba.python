@@ -1,0 +1,21 @@
+with open(INPUT_FILE, "r") as f:
+    grid = [
+        [int(num) for num in line.strip()]
+        for line in f
+    ]
+
+WIDTH, HEIGHT = len(grid[0]), len(grid)
+
+grid = (  # Enclose the grid in an artificial boundary of 9s.
+    [[9] * (WIDTH + 2)] +                # Create a row at the top containing only 9s.
+    [[9] + row + [9] for row in grid] +  # Put a 9 on the left and right of each row.
+    [[9] * (WIDTH + 2)]                  # Create a row at the bottom containing only 9s.
+)
+
+risk = 0
+for r in range(1, HEIGHT + 1):
+    for c in range(1, WIDTH + 1):
+        values = [grid[r - 1][c], grid[r + 1][c], grid[r][c - 1], grid[r][c + 1]]
+        if min(values) > grid[r][c]:
+            risk += grid[r][c] + 1
+print(risk)

@@ -1,0 +1,27 @@
+class Parser:
+    def __init__(self, parse=None):
+        self.parse = parse
+
+    def __call__(self, input_):
+        return self.parse(input_)
+
+    def __rshift__(self, other):
+        """P >> Q is sequential parsing."""
+        def parse(input_):
+            results, input__ = self.parse(input_)
+            if results is not None:
+                results_, input__ = other.parse(input__)
+                if results_ is not None:
+                    return results + results_, input__
+            return None, input_
+        return Parser(parse)
+
+class Char(Parser):
+    """Parses a single (given) character."""
+    def __init__(self, char):
+        def parse(input_):
+            if input_[0] == char:
+                return ([char], input_[1:])
+            return None, input_
+        super().__init__(parse)
+        self.char = char

@@ -1,0 +1,13 @@
+def fuel_cost(distance):
+    if distance <= 1:
+        return distance
+    return distance + fuel_cost(distance - 1)
+
+# or
+
+def fuel_cost(distance):
+    return sum(n for n in range(distance + 1))
+    # acc = 0
+    # for n in range(distance + 1):
+    #     acc += n
+    # return acc

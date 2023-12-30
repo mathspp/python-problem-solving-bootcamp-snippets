@@ -1,0 +1,41 @@
+def explode(snailfish_num, depth=0):
+    """Tries to explode the snailfish number given.
+
+    Returns 4 values:
+     - the snailfish number result;
+     - a Boolean indicating whether there was an explosion;
+     - if there was an explosion, the number to add on the left; and
+     - if there was an explosion, the number to add on the right.
+    """
+
+    # If we found an integer, we reached the bottom.
+    if type(snailfish_num) == int:
+        return snailfish_num, False, None, None
+
+    # Split the number into left and right parts.
+    left, right = snailfish_num
+    # If we are deep enough, explode right now.
+    if depth >= 4:
+        # Upon explosion, the pair we're in becomes a 0.
+        return 0, True, left, right
+
+    # Explode recursively, first on the left.
+    left, exploded, add_l, add_r = explode(left, depth + 1)
+    # If there was an explosion, check if we need to add something.
+    # Then, don't explode on the right; we only do one explosion
+    # at a time.
+    if exploded:
+        if add_r is not None:
+            right = add_left(right, add_r)
+        return [left, right], True, add_l, None
+
+    # If there was no explosion on the left, we can go right.
+    right, exploded, add_l, add_r = explode(right, depth + 1)
+    # We handle the right side similarly:
+    if exploded:
+        if add_l is not None:
+            left = add_right(left, add_l)
+        return [left, right], True, None, add_r
+
+    # If we got to this point, nothing exciting happened.
+    return [left, right], False, None, None

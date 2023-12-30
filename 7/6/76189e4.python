@@ -1,0 +1,9 @@
+a = Char("a")
+b = Char("b")
+c = Char("c")
+abc = a >> b >> c
+print(abc("abcd"))
+print(abc.join()("abcd"))  # Results are joined.
+print(abc.group(2)("abcd"))  # 2 last results are grouped.
+print(abc.map(str.upper)("abcd"))  # Results are transformed to upper case.
+print((~a >> b >> c)("abcd"))  # Result of `a` is suppressed.

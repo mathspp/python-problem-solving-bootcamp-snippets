@@ -1,0 +1,9 @@
+from collections import Counter
+
+with open(INPUT_FILE, "r") as f:
+    fish_pop = Counter(int(num) for num in f.readline().split(","))
+
+vec = [[fish_pop[i]] for i in range(9)]  # [[x0], [x1], ...] for a column vector.
+A256 = fast_power(A, 256, matmul)
+end = matmul(A256, vec)
+print(sum(v[0] for v in end))

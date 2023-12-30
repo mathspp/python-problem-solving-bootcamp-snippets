@@ -1,0 +1,5 @@
+parse_packet("0001001100000000")
+#             ^^^~~~^^^^^^^^^^
+#             |  |  | value section is 1 1000 0 0000 so value is 10000000, 128
+#             |  |  type 4
+#             | version 0

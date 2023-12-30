@@ -1,0 +1,5 @@
+from itertools import pairwise, starmap
+from operator import le
+
+with open(INPUT_FILE, "r") as f:
+    print(sum(starmap(le, pairwise(map(int, f)))))

@@ -1,0 +1,6 @@
+one_line_folded = {
+    (x if x < value else value - (x - value), y)  # What to do if the coord is x.
+    if coord == "x" else                          # Check whether coord is x or not.
+    (x, y if y < value else value - (y - value))  # What to do if the coord is NOT x.
+    for x, y in points
+}

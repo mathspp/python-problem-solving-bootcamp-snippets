@@ -1,0 +1,136 @@
+from time import time
+
+POINT_MATCH_THRESHOLD = 12
+ROTATIONS = [  # Start by fixing the main direction we are facing.
+    # facing positive x
+    (1, 2, 3),
+    (1, -3, 2),
+    (1, -2, -3),
+    (1, 3, -2),
+    # facing negative x
+    (-1, -2, 3),
+    (-1, 3, 2),
+    (-1, 2, -3),
+    (-1, -3, -2),
+    # facing positive y
+    (2, 3, 1),
+    (2, -1, 3),
+    (2, -3, -1),
+    (2, 1, -3),
+    # facing negative y
+    (-2, -3, 1),
+    (-2, 1, 3),
+    (-2, 3, -1),
+    (-2, -1, -3),
+    # facing positive z
+    (3, 1, 2),
+    (3, -2, 1),
+    (3, -1, -2),
+    (3, 2, -1),
+    # facing negative z
+    (-3, -1, 2),
+    (-3, 2, 1),
+    (-3, 1, -2),
+    (-3, -2, -1),
+]
+
+class Point:
+    def __init__(self, x, y, z):
+        self.x, self.y, self.z = x, y, z
+
+    @classmethod
+    def fromstring(cls, string):
+        """Create a point from a comma-separated string."""
+        return cls(*map(int, string.strip().split(",")))
+
+    def __add__(self, other):
+        """Implements self + other, if other is a Point."""
+        return Point(self.x + other.x, self.y + other.y, self.z + other.z)
+
+    def __sub__(self, other):
+        """Implements self - other, if other is a Point."""
+        return Point(self.x - other.x, self.y - other.y, self.z - other.z)
+
+    def __repr__(self):
+        """Returns the string representation of self."""
+        return f"Point({self.x}, {self.y}, {self.z})"
+
+    def __eq__(self, other):
+        """Check if the two points are equal."""
+        return (self.x, self.y, self.z) == (other.x, other.y, other.z)
+    
+    def __hash__(self):
+        """Gives a unique hash to each point to allow points to be contained in sets."""
+        return hash((self.x, self.y, self.z))
+
+    def rotate(self, rot):
+        coords = [None, self.x, self.y, self.z]
+        return Point(*[sign(c) * coords[abs(c)] for c in rot])
+
+    
+def sign(x):
+    if x > 0: return 1
+    elif x < 0: return -1
+    else: return 0
+
+
+def all_rotations(points):
+    return [
+        [point.rotate(rot) for point in points]
+        for rot in ROTATIONS
+    ]
+
+
+def build_list_of_differences(points):
+    return [[p2 - p1 for p2 in points] for p1 in points]
+
+
+def points_of_view_match(references, others, point_matching_threshold):
+    """Check if two POVs match and return indices of matching points."""
+    for ref_idx, reference in enumerate(references):
+        for other_idx, other in enumerate(others):
+            if len(set(reference) & set(other)) >= point_matching_threshold - 1:
+                return True, ref_idx, other_idx
+    return False, None, None
+
+
+def scanners_match(ref_scanner, other_scanner):
+    """Check if two scanners match and try to transform the 2nd into the 1st."""
+
+    ref_diffs = build_list_of_differences(ref_scanner)
+    for rotated in all_rotations(other_scanner):
+        rotated_diffs = build_list_of_differences(rotated)
+        matched, ref_idx, other_idx = points_of_view_match(
+            ref_diffs,
+            rotated_diffs,
+            POINT_MATCH_THRESHOLD,
+        )
+        if not matched:
+            continue  # Try another rotation if no match was found.
+        # Here, ref_scanner[ref_idx] and rotated[other_idx] match!
+        vec = ref_scanner[ref_idx] - rotated[other_idx]  # Translation vector.
+        return True, ref_scanner, [oth + vec for oth in other_scanner]
+    return False, ref_scanner, other_scanner
+
+
+with open(INPUT_FILE, "r") as f:
+    scanners = [
+        list(map(Point.fromstring, scanner.splitlines()[1:]))  # Ignore header line.
+        for scanner in f.read().split("\n\n")  # Split in scanner groups.
+    ]
+
+
+reference = scanners[0]
+scanners = scanners[1:]
+start = time()
+while scanners:
+    # print("Starting the loop.")
+    for other_idx, other_scanner in enumerate(scanners):
+        matched, reference, other_scanner = scanners_match(reference, other_scanner)
+        if matched:
+            reference = list(set(reference) | set(other_scanner))
+            del scanners[other_idx]
+            print(f"Found a match. {len(scanners)} left.")
+            break
+print(len(reference))
+print(f"Took {(time() - start) / 60:.2f} minutes.")

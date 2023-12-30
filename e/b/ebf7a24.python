@@ -1,0 +1,4 @@
+def sign(x):
+    return (x > 0) - (x < 0)
+
+list(map(sign, range(-5, 6)))

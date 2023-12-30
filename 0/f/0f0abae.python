@@ -1,0 +1,12 @@
+def score_board_by_status_matrix(last_drawn, board, status):
+    acc = 0
+    for row_b, row_s in zip(board, status):
+        for num, marked in zip(row_b, row_s):
+            acc += num * (not marked)
+    return acc * last_drawn
+
+score_board_by_status_matrix(*bingo_simulation(
+    numbers,
+    boards,
+    [empty_boolean_matrix(len(boards[0])) for _ in boards],
+))

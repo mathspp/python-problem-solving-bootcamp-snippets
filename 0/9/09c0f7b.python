@@ -1,0 +1,5 @@
+from collections import Counter
+
+counts = Counter(sum(rolls) for rolls in product(range(1, 4), repeat=3))
+print(counts)
+print(counts.total())  # New in Python 3.9, I think..?

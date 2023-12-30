@@ -1,0 +1,4 @@
+def find_character(rules, source):
+    return next(new_char for pair, new_char in rules if pair == source)
+
+print(find_character(rules, "SS"))

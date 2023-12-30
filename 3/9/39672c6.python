@@ -1,0 +1,32 @@
+from collections import Counter, defaultdict
+from itertools import pairwise  # `pairwise` is Python 3.10+
+from math import ceil
+
+rules = defaultdict(list)
+with open(INPUT_FILE, "r") as f:
+    polymer = f.readline().strip()
+    f.readline()  # Read the empty line.
+    for line in f:
+        pair, char = line.strip().split(" -> ")
+        rules[pair[0] + char].append(pair)
+        rules[char + pair[1]].append(pair)
+
+# Pair substition into the template polymer.
+counts = Counter("".join(pair) for pair in pairwise(polymer))
+for _ in range(40):
+    counts = Counter({
+        pair: sum(counts[source] for source in rules[pair])
+        for pair in rules
+    })
+
+# Count the elements based off of the occurrences of the pairs.
+element_counts = Counter()
+for pair, count in counts.items():
+    element_counts[pair[0]] += count
+    element_counts[pair[1]] += count
+
+for element, count in element_counts.items():
+    element_counts[element] = ceil(count / 2)
+
+# Count the most and least common letters.
+print(max(element_counts.values()) - min(element_counts.values()))

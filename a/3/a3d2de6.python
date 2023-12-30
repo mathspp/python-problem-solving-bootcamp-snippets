@@ -1,0 +1,30 @@
+class Point:
+    def __init__(self, x, y, z):
+        self.x, self.y, self.z = x, y, z
+
+    def __eq__(self, other):
+        """Check if the two points are equal."""
+        return (self.x, self.y, self.z) == (other.x, other.y, other.z)
+
+    def rotate(self, rot):
+        coords = [None, self.x, self.y, self.z]
+        return Point(*[sign(c) * coords[abs(c)] for c in rot])
+    #...
+
+    def coords(self):
+        """Returns a list with all the coordinates of the point."""
+        return [self.x, self.y, self.z]
+
+def find_rotation(reference, other):
+    """Finds the rotation `rot` such that other.rotate(rot) == reference."""
+    ref, oth = reference.coords(), other.coords()
+    abs_ref, abs_other = [round(abs(c)) for c in ref], [round(abs(c)) for c in oth]
+    rot = []
+    for i in range(3):
+        is_at = abs_other.index(abs_ref[i])
+        rot.append(sign(ref[i] * oth[is_at]) * (1 + is_at))
+    return rot
+
+A = Point(4, 5, 6)
+B = Point(-5, 6, 4)
+print(B.rotate(find_rotation(A, B)) == A)

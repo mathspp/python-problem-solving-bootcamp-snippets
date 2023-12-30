@@ -1,0 +1,22 @@
+def split(snailfish_num):
+    """Tries to split a snailfish number.
+
+    Returns 2 values, the resulting snailfish number and a Boolean
+    flag indicating whether or not any splitting happened."""
+
+    if type(snailfish_num) == int:
+        if snailfish_num >= 10:
+            n, r = snailfish_num, snailfish_num % 2
+            return [int((n - r) / 2), int((n - r) / 2 + r)], True
+        else:
+            return snailfish_num, False
+
+    # This snailfish number is a pair, try splitting each half.
+    left, right = snailfish_num
+    left, split_happened = split(left)
+    # If the left side was split, don't try splitting the right side.
+    if split_happened:
+        return [left, right], split_happened
+
+    right, split_happened = split(right)
+    return [left, right], split_happened

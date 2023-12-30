@@ -1,0 +1,28 @@
+from collections import Counter
+
+with open(INPUT_FILE, "r") as f:
+    lines = f.readlines()
+bits = len(lines[0])
+    
+under_consideration = lines
+for col in range(bits):
+    if len(under_consideration) == 1:
+        break
+    
+    # Count 0s and 1s in the appropriate column.
+    counts = Counter(line[col] for line in under_consideration)
+    pick = "0" if counts["0"] > counts["1"] else "1"
+    under_consideration = [line for line in under_consideration if line[col] == pick]
+oxygen_rating = under_consideration[0]
+
+under_consideration = lines
+for col in range(bits):
+    if len(under_consideration) == 1:
+        break
+    
+    counts = Counter(line[col] for line in under_consideration)
+    pick = "0" if counts["0"] <= counts["1"] else "1"
+    under_consideration = [line for line in under_consideration if line[col] == pick]
+co2_rating = under_consideration[0]
+
+print(int(oxygen_rating, 2) * int(co2_rating, 2))

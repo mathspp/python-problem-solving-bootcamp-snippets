@@ -1,0 +1,19 @@
+hit_target = set()  # Set of (vx, vy) that hit the target.
+# First vx for which the probe goes over the target moving
+# (i.e., doesn't stop aligned with the target).
+moving_probe_vx = 1 + floor((-1 + sqrt(1 + 8 * xmax)) / 2)
+for t, vys in vy_by_t.items():
+    # Check if this value of `t` can be paired up with vx's that align with the target.
+    # For that to happen, the x coordinate has to already be on target
+    # when the y coordinate gets there.
+    hit_target.update({
+        (vx, vy) for vx, t_x_enter in x_steps.items() for vy in vys
+        if t >= t_x_enter
+    })
+    # Check which "moving" x velocities intersect the target.
+    # Recall that our calculations only made sense if vx >= t.
+    vx_min = max(ceil((xmin / t) - ((1 - t) / 2)), moving_probe_vx, t)
+    vx_max = floor((xmax / t) - ((1 - t) / 2))
+    assert all(xmin <= ((vx * (vx + 1)) / 2) - (((vx - t) * (vx - t + 1)) / 2) <= xmax for vx in range(vx_min, vx_max + 1))
+    hit_target.update(product(range(vx_min, vx_max + 1), vys))
+print(len(hit_target))

@@ -1,0 +1,4 @@
+from math import prod
+
+lengths = [len(find_basin(grid, r, c)) for r, c in low_points]
+print(prod(sorted(lengths)[-3:]))

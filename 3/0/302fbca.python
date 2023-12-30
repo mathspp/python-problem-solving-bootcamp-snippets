@@ -1,0 +1,5 @@
+from itertools import cycle, islice
+
+s = "abcde"
+for char in islice(cycle(s), 20):
+    print(char, end=" ")

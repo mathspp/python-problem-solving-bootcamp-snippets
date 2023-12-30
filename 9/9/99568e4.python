@@ -1,0 +1,14 @@
+from itertools import zip_longest
+
+def build_segment(segment):
+    ((x1, y1), (x2, y2)) = segment
+    dxs = range(x2 - x1 + 1) if x2 >= x1 else range(0, x2 - x1 - 1, -1)
+    dys = range(y2 - y1 + 1) if y2 >= y1 else range(0, y2 - y1 - 1, -1)
+    return [(x1 + dx, y1 + dy) for dx, dy in zip_longest(dxs, dys, fillvalue=0)]
+
+print(build_segment([[0, 3], [0, 5]]))
+print(build_segment([[0, 5], [0, 3]]))
+print(build_segment([[0, 3], [5, 3]]))
+print(build_segment([[5, 3], [0, 3]]))
+print(build_segment([(0, 5), (3, 2)]))
+print(build_segment([(3, 2), (0, 5)]))

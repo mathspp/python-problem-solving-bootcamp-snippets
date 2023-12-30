@@ -1,0 +1,3 @@
+print(tree_counter["1"]["1"]["1"])  # How many times have we seen the string "111"?
+add_count(tree_counter, "111")      # Oh, hey, we just saw the string "111"!
+print(tree_counter["1"]["1"]["1"])  # Now, how many times have we seen the string "111"?

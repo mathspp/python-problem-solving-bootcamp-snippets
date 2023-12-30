@@ -1,0 +1,5 @@
+def flat_board_has_bingo(board_lst, n):
+    return (
+        any(sum(r == i for r, _ in board_lst) == n for i in range(n)) or
+        any(sum(c == i for _, c in board_lst) == n for i in range(n))
+    )

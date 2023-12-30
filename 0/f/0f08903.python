@@ -1,0 +1,24 @@
+from enum import auto, StrEnum
+
+# We define an Enum(eration) with the valid commands.
+class Command(StrEnum):
+    FORWARD = auto()
+    UP = auto()
+    DOWN = auto()
+
+horiz_pos, depth, aim = 0, 0, 0
+
+with open(INPUT_FILE, "r") as f:
+    for line in f:
+        command, value = line.split()
+        value = int(value)
+        command = Command(command)  # We say that `command` is a `Command`, ...
+
+        match command:
+            case Command.FORWARD:
+                horiz_pos += value
+                depth += aim * value
+            case Command.UP:
+                aim -= value
+
+    print(horiz_pos * depth)

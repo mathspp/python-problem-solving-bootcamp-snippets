@@ -1,0 +1,13 @@
+def neighbouring_positions(matrix, r, c):
+    return {
+        (r_, c_) for r_, c_ in [(r - 1, c), (r, c - 1), (r + 1, c), (r, c + 1)]
+        if 0 <= r_ < len(matrix) and 0 <= c_ < len(matrix[0])
+    }
+
+risk = 0
+for r, row in enumerate(grid):
+    for c, val in enumerate(row):
+        values = [grid[r_][c_] for r_, c_ in neighbouring_positions(grid, r, c)]
+        if min(values) > val:
+            risk += val + 1
+print(risk)

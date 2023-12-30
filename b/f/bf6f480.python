@@ -1,0 +1,18 @@
+from math import ceil, sqrt
+
+with open(INPUT_FILE, "r") as f:
+    data = f.readline().strip()
+
+xdata, ydata = data.removeprefix("target area: ").split(", ")
+(xmin, xmax), (ymin, ymax) = [map(int, cdata[2:].split("..")) for cdata in (xdata, ydata)]
+
+xrange = range(ceil((-1 + sqrt(1 + 8 * xmin)) / 2), xmax + 1)
+yrange = range(0, abs(ymin) + 1)
+
+min_vx = ceil((-1 + sqrt(1 + 8 * xmin)) / 2)
+
+tentative_vy = abs(ymin) - 1
+if 2 * tentative_vy - 1 >= min_vx:
+    print(tentative_vy * (tentative_vy + 1) // 2)
+else:
+    print("No luck, keep going.")

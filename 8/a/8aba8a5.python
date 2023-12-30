@@ -1,0 +1,51 @@
+from collections import defaultdict
+from itertools import product
+from queue import PriorityQueue
+from time import time
+
+def neighbour_positions(r, c, grid):
+    return {
+        (r_, c_) for r_, c_ in [(r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)]
+        if 0 <= r_ < len(grid) and 0 <= c_ < len(grid[0])
+    }
+
+def h(r, c, grid):
+    return grid[r][c] + abs(r - len(grid) + 1) + abs(c - len(grid[0]) + 1) - 1
+
+with open(INPUT_FILE, "r") as f:
+    grid = [[int(n) for n in line.strip()] for line in f]
+
+# Compute full map.
+R, C = len(grid), len(grid[0])
+
+full_map = [[None for _ in range(5 * C)] for _ in range(5 * R)]
+for r, c in product(range(R), range(C)):
+    for mr, mc in product(range(5), range(5)):
+        new_value = ((grid[r][c] + mr + mc - 1) % 9) + 1
+        full_map[r + mr * R][c + mc * C] = new_value
+# Rename it to `grid`:
+grid = full_map
+
+SOURCE, DEST = (0, 0), (len(grid) - 1, len(grid[0]) - 1)
+
+start = time()  # Start a timer.
+
+queue = PriorityQueue()
+costs = defaultdict(lambda: float("inf"))  # Dictionary with default infinity cost.
+queue.put((h(*SOURCE, grid), SOURCE))  # Queue of possible paths to extend.
+costs[SOURCE] = 0  # Cost of reaching the given nodes from the origin.
+while not queue.empty():
+    estimated_cost, node = queue.get()
+
+    if node == DEST:  # We just reached the destination! Stop :)
+        break
+
+    for r, c in neighbour_positions(*node, grid):
+        tentative_score = costs[node] + grid[r][c]
+        # Check if the current path is a better way to get to `(r, c)`.
+        if tentative_score < costs[r, c]:
+            costs[r, c] = tentative_score
+            queue.put((costs[r, c] + h(r, c, grid), (r, c)))
+
+end = time()
+print(f"Found shortest path of total risk level {costs[DEST]} in {end - start}s.")

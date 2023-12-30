@@ -1,0 +1,158 @@
+class Parser:
+    def __init__(self, parse=None):
+        self.parse = parse
+
+    def __call__(self, input_):
+        return self.parse(input_)
+    
+    def __mul__(self, other):
+        """P * n is repeated parsing."""
+        if not isinstance(other, int):
+            raise TypeError()
+
+        def parse(input_):
+            # print(f"In * with {input_ = }")
+            result = []
+            for _ in range(other):
+                res, input_ = self.parse(input_)
+                if res is None:
+                    break
+                result += res
+            else:
+                return result, input_
+            return None, input_
+        return Parser(parse)
+    
+    def __rmul__(self, other):
+        """n * P is repeated parsing."""
+        return self * other
+
+    def __rshift__(self, other):
+        """P >> Q is sequential parsing."""
+        def parse(input_):
+            # print(f"In >> with {input_ = }")
+            results, input__ = self.parse(input_)
+            if results is not None:
+                results_, input__ = other.parse(input__)
+                if results_ is not None:
+                    return results + results_, input__
+            return None, input_
+        return Parser(parse)
+
+    def __gt__(self, other):
+        """P > Q is sequential parsing, where P's output is fed to Q."""
+        def parse(input_):
+            # print(f"In > with {input_ = }")
+            results, input__ = self.parse(input_)
+            if results is not None:
+                results_, input__ = other.parse(input__, results)
+                if results_ is not None:
+                    return results_, input__
+            return None, input_
+        return Parser(parse)
+
+    def __or__(self, other):
+        """P | Q is alternative parsing; first to succeed returns."""
+        def parse(input_):
+            # print(f"In | with {input_ = }")
+            res, input__ = self.parse(input_)
+            if res is None:
+                res, input__ = other.parse(input_)
+            return res, input__
+        return Parser(parse)
+
+    def many(self):
+        """0 or more copies of self."""
+        def parse(input_):
+            # print(f"In many with {input_ = }")
+            result = []
+            while input_:
+                res, input_ = self.parse(input_)
+                if res is None:
+                    break
+                result += res
+            return result, input_
+        return Parser(parse)
+
+    def join(self):
+        """Join the results of parsing into a single string."""
+        def parse(input_):
+            # print(f"In join with {input_ = }")
+            results, input_ = self.parse(input_)
+            if results is None:
+                return None, input_
+            return ["".join(results)], input_
+        return Parser(parse)
+
+    def group(self, n=None):
+        """Group the last `n` results into a tuple."""
+        def parse(input_):
+            # print(f"In group with {input_ = }")
+            results, input_ = self.parse(input_)
+            if results is None:
+                return None, input_
+            if n is None:
+                return [results], input_
+            results[-n] = tuple(results[-n:])
+            if n > 1:
+                del results[-n + 1:]
+            return results, input_
+        return Parser(parse)
+
+    def __invert__(self):
+        """~P is an alias for P.suppress()."""
+        return self.suppress()
+
+    def suppress(self):
+        """Ignore results when it succeeds."""
+        def parse(input_):
+            # print(f"In suppress with {input_ = }")
+            results, input_ = self.parse(input_)
+            if results is None:
+                return None, input_
+            return [], input_
+        return Parser(parse)
+
+    def apply(self, fn):
+        """Apply a function to the parsing results, if successful."""
+        def parse(input_):
+            # print(f"In apply with {input_ = }")
+            results, input_ = self.parse(input_)
+            if results is None:
+                return None, input_
+            return fn(results), input_
+        return Parser(parse)
+
+    def map(self, fn):
+        """Map a function over successful parsing results."""
+        def parse(input_):
+            # print(f"In map with {input_ = }")
+            results, input_ = self.parse(input_)
+            if results is None:
+                return None, input_
+            return [fn(r) for r in results], input_
+        return Parser(parse)
+
+
+class Char(Parser):
+    """Parses a single (given) character."""
+    def __init__(self, char):
+        def parse(input_):
+            # print(f"In char with {input_ = }") 
+            if input_[0] == char:
+                return ([char], input_[1:])
+            return None, input_
+        super().__init__(parse)
+        self.char = char
+
+
+class String(Parser):
+    """Parses a given string."""
+    def __init__(self, string):
+        def parse(input_):
+            # print(f"In string with {input_ = }")
+            if input_.startswith(string):
+                return ([string], input_.removeprefix(string))
+            return None, input_
+        super().__init__(parse)
+        self.string = string

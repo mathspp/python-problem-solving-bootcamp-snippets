@@ -1,0 +1,45 @@
+from collections import deque
+from time import time
+
+def neighbour_positions(r, c, grid):
+    return {
+        (r_, c_) for r_, c_ in [(r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)]
+        if 0 <= r_ < len(grid) and 0 <= c_ < len(grid[0])
+    }
+
+example_input = """1163751742
+1381373672
+2136511328
+3694931569
+7463417111
+1319128137
+1359912421
+3125421639
+1293138521
+2311944581"""
+grid = [[int(n) for n in line.strip()] for line in example_input.splitlines()]
+
+SOURCE, DEST = (0, 0), (len(grid) - 1, len(grid[0]) - 1)
+
+start = time()  # Start a timer.
+
+shortest_found = sum(grid[r][0] for r in range(DEST[0] + 1)) + sum(grid[DEST[0]][c] for c in range(DEST[1] + 1))
+# Paths are pairs (nodes_visited, cost_so_far); seed the queue with ([(0, 0)], 0).
+queue = deque([([SOURCE], 0)])
+while queue:
+    path_data = queue.pop()
+    nodes_visited, cost_so_far = path_data
+    last = nodes_visited[-1]
+    if cost_so_far >= shortest_found:
+        continue
+    if last == DEST:
+        shortest_found = min(shortest_found, cost_so_far)
+        continue
+
+    queue.extend([
+        (nodes_visited + [(r, c)], cost_so_far + grid[r][c]) for r, c in neighbour_positions(*last, grid)
+        if (r, c) not in nodes_visited
+    ])
+
+end = time()
+print(f"Found shortest path of total risk level {shortest_found} in {end - start}s.")

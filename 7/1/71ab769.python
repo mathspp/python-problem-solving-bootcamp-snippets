@@ -1,0 +1,15 @@
+scores = 0
+for line in lines:
+    stack = LifoQueue()
+    is_valid = True  # All lines are innocent...
+    for char in line:
+        if char in OPENING:
+            stack.put(char)
+        elif char in CLOSING:
+            op = stack.get()
+            if char != CLOSE_WITH[op]:
+                is_valid = False  # ... until proven guilty!
+                break
+    if not is_valid:  # If the line contains an error,
+        scores += SYNTAX_SCORES[char]  # update the syntax error scores.
+print(scores)

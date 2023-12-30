@@ -1,0 +1,12 @@
+def snail_print(snail):
+    """Takes a snail and returns its string representation."""
+    values, depths = snail
+    result, prev_depth = "", 0
+    for idx, depth in enumerate(depths):
+        if depth > prev_depth:
+            result += "[" * (depth - prev_depth) + str(values[idx]) + ","
+        else:
+            result += str(values[idx]) + "]" * (prev_depth - depth) + ","
+        prev_depth = depth
+    result += str(values[-1]) + "]" * prev_depth
+    return result

@@ -1,0 +1,8 @@
+def magnitude(snailfish_num):
+    """Returns the magnitude of a snailfish number."""
+
+    if isinstance(snailfish_num, int):
+        return snailfish_num
+
+    left, right = snailfish_num
+    return 3 * magnitude(left) + 2 * magnitude(right)

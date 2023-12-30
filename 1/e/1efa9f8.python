@@ -1,0 +1,12 @@
+def score_board_by_list_of_coordinates(num_drawn, board, status):
+    board_size = int(len(board) ** 0.5)
+    acc = sum(board)
+    for r, c in status:
+        acc -= board[r * board_size + c]
+    return num_drawn * acc
+
+score_board_by_list_of_coordinates(*bingo_simulation(
+    numbers,
+    boards,
+    [[] for _ in boards],
+))

@@ -1,0 +1,9 @@
+with open(INPUT_FILE, "r") as f:
+    depths = (int(line) for line in f)
+
+    count = 0
+    for prev_, next_ in zip(depths, depths[1:]):
+        if prev_ < next_:
+            count += 1
+
+    print(count)

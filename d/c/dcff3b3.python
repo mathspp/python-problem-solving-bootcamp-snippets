@@ -1,0 +1,33 @@
+from collections import defaultdict
+from itertools import product
+
+def enhance(image, bounds, algorithm):
+    new_padding = algorithm[0] if image.default_factory() == "0" else algorithm[-1]
+    new_image = defaultdict(lambda: new_padding)
+
+    (min_r, max_r), (min_c, max_c) = bounds
+    for r in range(min_r - 1, max_r + 2):
+        for c in range(min_c - 1, max_c + 2):
+            binary = ""
+            for dr, dc in product([-1, 0, 1], repeat=2):
+                binary += image[r + dr, c + dc]
+            new_image[r, c] = algorithm[int(binary, 2)]
+
+    new_bounds = (min_r - 1, max_r + 1), (min_r - 1, max_r + 1)
+    return new_image, new_bounds
+
+with open(INPUT_FILE, "r") as f:
+    algo, data = f.read().replace("#", "1").replace(".", "0").split("\n\n")
+
+image = defaultdict(lambda: "0")
+image.update({
+    (r, c): char
+    for r, line in enumerate(data.splitlines()) for c, char in enumerate(line)
+})
+max_x, max_y = max(image.keys())
+bounds = ((0, max_x), (0, max_y))
+
+for _ in range(50):
+    image, bounds = enhance(image, bounds, algo)
+
+print(sum(value == "1" for value in image.values()))

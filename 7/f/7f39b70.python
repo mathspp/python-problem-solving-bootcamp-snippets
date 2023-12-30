@@ -1,0 +1,9 @@
+acc = 0
+for line in lines:
+    hints, values = map(str.split, line.split(" | "))
+    for ordering in ALL_ORDERINGS:
+        if all(translate(ordering, hint) in SEGMENTS for hint in hints):
+            digit_ints = [SEGMENTS.index(translate(ordering, value)) for value in values]
+            acc += int("".join(str(digit) for digit in digit_ints))
+            break
+print(acc)

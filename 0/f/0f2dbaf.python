@@ -1,0 +1,20 @@
+with open(INPUT_FILE, "r") as f:
+    grid = {
+        (r, c): int(n)
+        for r, line in enumerate(f) for c, n in enumerate(line.strip())
+    }
+
+flashes = 0
+for _ in range(100):
+    to_flash = []
+    for coords in grid.keys():
+        grid[coords] = (grid[coords] + 1) % 10
+        if grid[coords] == 0:
+            to_flash.append(coords)
+
+    for coords in to_flash:
+        flash(grid, coords)
+
+    flashes += sum(energy_level == 0 for energy_level in grid.values())
+
+print(flashes)

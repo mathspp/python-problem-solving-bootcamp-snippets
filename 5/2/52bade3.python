@@ -1,0 +1,55 @@
+from collections import defaultdict
+from math import ceil, floor, sqrt
+
+with open(INPUT_FILE, "r") as f:
+    data = f.readline().strip()
+
+xdata, ydata = data.removeprefix("target area: ").split(", ")
+(xmin, xmax), (ymin, ymax) = [map(int, cdata[2:].split("..")) for cdata in (xdata, ydata)]
+
+yrange = range(ymin, abs(ymin) + 1)
+
+vy_by_t = defaultdict(list)
+for vy in yrange:
+    X = 2 * vy + 1
+    tmin = ceil((X + sqrt(X ** 2 - 8 * ymax)) / 2)
+    tmax = floor((X + sqrt(X ** 2 - 8 * ymin)) / 2)
+    for t in range(tmin, tmax + 1):
+        vy_by_t[t].append(vy)
+
+xrange = range(
+    ceil((-1 + sqrt(1 + 8 * xmin)) / 2),
+    1 + floor((-1 + sqrt(1 + 8 * xmax)) / 2),
+)
+x_steps = {}
+for vx in xrange:
+    # Probe will stop going right inside the target, but check
+    # if it was already _on_ the target in the previous steps.
+    t, x, vx_ = vx, vx * (vx + 1) // 2, 1
+    while xmin <= x:  # Walk left.
+        x -= vx_
+        vx_ += 1
+        t -= 1
+    x_steps[vx] = t + 1  # We took 1 step left too many.
+    continue
+x_steps
+
+hit_target = set()  # Set of (vx, vy) that hit the target.
+# First vx for which the probe goes over the target moving
+# (i.e., doesn't stop aligned with the target).
+moving_probe_vx = 1 + floor((-1 + sqrt(1 + 8 * xmax)) / 2)
+for t, vys in vy_by_t.items():
+    # Check if this value of `t` can be paired up with vx's that align with the target.
+    # For that to happen, the x coordinate has to already be on target
+    # when the y coordinate gets there.
+    hit_target.update({
+        (vx, vy) for vx, t_x_enter in x_steps.items() for vy in vys
+        if t >= t_x_enter
+    })
+    # Check which "moving" x velocities intersect the target.
+    # Recall that our calculations only made sense if vx >= t.
+    vx_min = max(ceil((xmin / t) - ((1 - t) / 2)), moving_probe_vx, t)
+    vx_max = floor((xmax / t) - ((1 - t) / 2))
+    assert all(xmin <= ((vx * (vx + 1)) / 2) - (((vx - t) * (vx - t + 1)) / 2) <= xmax for vx in range(vx_min, vx_max + 1))
+    hit_target.update(product(range(vx_min, vx_max + 1), vys))
+print(len(hit_target))

@@ -1,0 +1,21 @@
+from queue import LifoQueue
+
+OPENING, CLOSING = "([{<", ")]}>"
+CLOSE_WITH = dict(zip(OPENING, CLOSING))
+SYNTAX_SCORES = dict(zip(CLOSING, [3, 57, 1197, 25137]))
+
+with open(INPUT_FILE, "r") as f:
+    lines = f.readlines()
+
+scores = 0
+for line in lines:
+    stack = LifoQueue()
+    for char in line:
+        if char in OPENING:
+            stack.put(char)
+        elif char in CLOSING:
+            op = stack.get()
+            if char != CLOSE_WITH[op]:
+                scores += SYNTAX_SCORES[char]
+                break
+print(scores)

@@ -1,0 +1,13 @@
+from itertools import cycle, islice
+
+with open(INPUT_FILE, "r") as f:
+    fish_input = [int(num) for num in f.readline().split(",")]
+
+fish_pop = [0] * 9
+for fish in fish_input:
+    fish_pop[fish] += 1
+
+for pointer in islice(cycle(range(9)), 256):
+    fish_pop[(pointer + 7) % 9] += fish_pop[pointer]
+    
+print(sum(fish_pop))

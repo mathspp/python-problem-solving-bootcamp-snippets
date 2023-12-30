@@ -1,0 +1,15 @@
+def fold_point(point, coord, value):
+    x, y = point
+    if coord == "x":
+        yf = y
+        if x < value:
+            xf = x
+        else:
+            xf = value - (x - value)
+    elif coord == "y":
+        xf = x
+        if y < value:
+            yf = y
+        else:
+            yf = value - (y - value)
+    return xf, yf

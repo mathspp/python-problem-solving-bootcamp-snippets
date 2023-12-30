@@ -1,0 +1,17 @@
+from itertools import product
+
+with open(INPUT_FILE, "r") as f:
+    graph_edges = [line.strip().split("-") for line in f.readlines()]
+
+# Read a set of nodes to remove duplicates and convert to list to preserve order.
+NODES = list({node for edge in graph_edges for node in edge})
+
+graph = dict.fromkeys(product(NODES, NODES), False)
+for v1, v2 in graph_edges:
+    graph[(v1, v2)] = True
+    graph[(v2, v1)] = True
+
+def neighbours(graph, cave):
+    return [dest for dest in NODES if graph[(cave, dest)]]
+
+neighbours(graph, "start")

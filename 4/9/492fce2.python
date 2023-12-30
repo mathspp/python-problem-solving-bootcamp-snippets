@@ -1,0 +1,31 @@
+FOLD_LINE_PREFIX = "fold along "
+
+def fold_point(point, coord, value):
+    x, y = point
+    if coord == "x":
+        yf = y
+        if x < value:
+            xf = x
+        else:
+            xf = value - (x - value)
+    elif coord == "y":
+        xf = x
+        if y < value:
+            yf = y
+        else:
+            yf = value - (y - value)
+    return xf, yf
+
+with open(INPUT_FILE, "r") as f:
+    data = f.read()
+
+# Split point data from fold data.
+point_data, fold_data = data.split("\n\n")
+points = {tuple(map(int, point.split(","))) for point in point_data.splitlines()}
+folds = fold_data.splitlines()
+
+fold = folds[0].removeprefix(FOLD_LINE_PREFIX) # Python 3.9+
+coord, value = fold.split("=")
+value = int(value)
+folded = {fold_point(point, coord, value) for point in points}
+print(len(folded))

@@ -1,0 +1,23 @@
+from math import ceil, floor
+
+def split(snailfish_num):
+    for idx, token in enumerate(snailfish_num):
+        if isinstance(token, int) and token > 9:
+            return (
+                snailfish_num[:idx] +
+                ["[", floor(token / 2), ",", ceil(token / 2), "]"] +
+                snailfish_num[idx + 1:]
+            ), True
+    return snailfish_num, False
+
+def snailfish_reduction(snailfish_num):
+    splitted = True
+    while splitted:
+        exploded = True
+        while exploded:
+            snailfish_num, exploded = explode(snailfish_num)
+        snailfish_num, splitted = split(snailfish_num)
+    return snailfish_num
+
+def addition(left, right):
+    return snailfish_reduction(["["] + left + [","] + right + ["]"])

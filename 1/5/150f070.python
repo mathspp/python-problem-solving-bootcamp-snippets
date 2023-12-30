@@ -1,0 +1,10 @@
+ranges = [
+    (0, 20),
+    (-30, 0),
+    (-5, 20),
+    (-18, 13),
+    (-10, 10),
+]
+
+for low, high in ranges:
+    print(ternary_search(low, high, lambda x: x ** 2))

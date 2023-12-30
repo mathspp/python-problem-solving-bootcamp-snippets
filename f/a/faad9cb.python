@@ -1,0 +1,43 @@
+from functools import partial
+from_bin = partial(int, base=2)
+
+D = Char("0") | Char("1")
+version = (3 * D).join().map(from_bin)
+type_ = (3 * D).join()
+packet_number = (11 * D).join()
+bit_length = (15 * D).join()
+group = (4 * D).join()
+
+# value := ("1" group)* "0" group
+value = ((~Char("1") >> group).many() >> ~Char("0") >> group).join().map(from_bin)
+
+packet = Parser()  # "Pre-define" because of circular references.
+
+# The two halves of the operator_packets rule are a bit ugly.
+# I suspect it's because this really isn't a _context free_ grammar.
+# Left side of the operator_packets rule.
+packets_by_bit_length = ~Char("0") >> (
+    bit_length > Parser(
+        lambda input_, bit_length: (
+            packet.many()(input_[:int(bit_length[-1], 2)])[0],
+            input_[int(bit_length[-1], 2):]
+        )
+    )
+)
+# Right side of the operator_packets rule.
+packets_by_packet_number = ~Char("1") >> (
+    packet_number > Parser(
+        lambda input_, packet_number: (
+            (packet * int(packet_number[-1], 2))(input_)
+        )
+    )
+)
+# operator_packets := ("0" bit_length packet* | "1" packet_number packet{packet_number})
+operator_packets = (packets_by_bit_length | packets_by_packet_number).group()
+
+# Update `.parse` function from the `parser` Parser.
+packet.parse = (
+    # packet := version ("100" value | type operator_packets)
+    (version >> ~String("100") >> value).group(2) |
+    (version >> type_ >> operator_packets).group(3)
+).parse

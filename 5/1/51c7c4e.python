@@ -1,0 +1,21 @@
+def parse_instruction_line(line):
+    command, value = line.split()
+    return command, int(value)
+
+horiz_pos, depth, aim = 0, 0, 0
+
+with open(INPUT_FILE, "r") as f:
+    for line in f:
+        command, value = parse_instruction_line(line)
+
+        if command == "forward":
+            horiz_pos += value
+            depth += aim * value
+        elif command == "up":
+            aim -= value
+        elif command == "down":
+            aim += value
+        else:
+            raise ValueError("Unknown command.")
+
+    print(horiz_pos * depth)

@@ -1,0 +1,3 @@
+width = max(max(l[0], r[0]) for l, r in segments)
+height = max(max(l[1], r[1]) for l, r in segments)
+print(width, height)

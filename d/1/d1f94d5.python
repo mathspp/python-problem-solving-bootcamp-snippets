@@ -1,0 +1,5 @@
+from itertools import cycle
+
+s = "abcde"
+for char, _ in zip(cycle(s), range(20)):
+    print(char, end=" ")

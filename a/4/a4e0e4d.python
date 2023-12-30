@@ -1,0 +1,21 @@
+def ternary_search(low, high, function):
+    """Minimises the given function in range(low, high + 1).
+    
+    We assume the function can only take integer values as input.
+    """
+
+    # If the range is very small, do it by hand.
+    # This also helps avoid off-by-one errors ;)
+    if high - low <= 5:
+        return min(function(val) for val in range(low, high + 1))
+
+    low_ = low + (high - low) // 3
+    f_low_ = function(low_)
+    high_ = low + 2 * (high - low) // 3
+    f_high_ = function(high_)
+    if f_low_ > f_high_:
+        return ternary_search(low_ + 1, high, function)
+    elif f_low_ < f_high_:
+        return ternary_search(low, high_ - 1, function)
+    else:  # Special case when the two values match.
+        return ternary_search(low_, high_, function)
